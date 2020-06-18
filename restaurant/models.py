@@ -16,6 +16,10 @@ class Restaurant(models.Model):
     columns = models.IntegerField()
     tables = models.IntegerField()
     is_ready = models.BooleanField(default=False)
+    capacity = models.IntegerField(default=0)
+    capacity_percent = models.IntegerField(default=0)
+    total_capacity = models.IntegerField(default=0)
+    capacity_reserved = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -32,11 +36,22 @@ class MenuItem(models.Model):
         return self.name
 
 
+class ReserveByHour(models.Model):
+    capacity = models.IntegerField(default=0)
+    currently_free = models.BooleanField(default=True)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    hour = models.TimeField(default='00:00')
+
+    def __str__(self):
+        return str(self.restaurant) + " " + str(self.capacity)+ " "+ str(self.hour)
+
+
 # Representing restaurant's table
 class Table(models.Model):
     number = models.IntegerField()
     row = models.IntegerField()
     column = models.IntegerField()
+    people = models.IntegerField(default=0)
     currently_free = models.BooleanField(default=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
@@ -52,13 +67,14 @@ Models for users representation
 class Guest(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=200, null=True, blank=True)
+    name =  models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_full_name()
 
 
 class Manager(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -87,6 +103,7 @@ class Reservation(models.Model):
     duration = models.IntegerField()
     guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    number_guest = models.IntegerField(default=0)
 
     def __str__(self):
         person = self.guest.user.get_full_name()

@@ -8,21 +8,7 @@
     <script src="{% static 'restaurant/sorttable.js' %}"></script>
 </head>
 <body>
-<div class="wrapper row1">
-  <header id="header" class="clear">
-    <div id="hgroup">
-      <h1>Restaurant</h1>
-	  <h2>Welcome, {{ user.get_full_name }}</h2>
-    </div>
-    <nav>
-      <ul>
-          <li><a href="{% url 'restaurant:manager' manager.id %}">Home</a></li>
-          <li><a href="{% url 'restaurant:profiling' manager.id %}">Profile</a></li>
-          <li class="last"><a href="{% url 'restaurant:logout' %}">Log Out</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
+{% include 'navbar_manager.html' %}
 <!-- content -->
 <div class="wrapper row2">
   <div id="container" class="clear">
@@ -52,7 +38,7 @@
               <br />
               <input id= "name" name = "password2" type="password" placeholder="Repeat New Password"  pattern=".{8,30}"  title="8 characters minimum, 30 maximum">
               <br />
-              <input type="submit" id = "sf_submit" value="Update">
+              <button class="btn btn-info" type="submit" id = "sf_submit" value="Update">Enviar</button>
               <br />
         </form>
         <br />
@@ -62,11 +48,5 @@
   </div>
 </div>
 <!-- Footer -->
-<div class="wrapper row3">
-  <footer id="footer" class="clear">
-    <p class="fl_left">Internet Software Architectures 2015/16</p>
-    <p class="fl_right">Dragan Vidaković RA 134/2012</p>
-  </footer>
-</div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Restaurant, MenuItem, Table, Guest, Manager, Friendship, Reservation, ReservedTables, Visit
-
+from .models import Restaurant, MenuItem, Table, Guest, Manager, Friendship, Reservation, ReservedTables, Visit, \
+    ReserveByHour
 
 admin.site.register(Restaurant)
 admin.site.register(MenuItem)
@@ -15,6 +15,7 @@ admin.site.register(Table, TableAdmin)
 admin.site.register(Guest)
 admin.site.register(Manager)
 admin.site.register(Friendship)
+admin.site.register(ReserveByHour)
 
 
 # changing order of fields for reservation

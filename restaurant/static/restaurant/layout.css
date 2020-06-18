@@ -1,7 +1,7 @@
 
 html{overflow-y:scroll;} /* Forces a scrollbar when the viewport is larger than the websites content - CSS3 */
 
-body{margin:0; padding:0; font-size:13px; font-family:Georgia, "Times New Roman", Times, serif; color:#919191; background-color:#417690;}
+body{margin:0; padding:0; font-size:13px; font-family:Georgia, "Times New Roman", Times, serif; color:#919191; background-color:#BEE5EB;}
 
 .clear:after{content:"."; display:block; height:0; clear:both; visibility:hidden; line-height:0;}
 .clear{display:block; clear:both;}
@@ -32,10 +32,10 @@ q:after{content:' �'; font-size:26px; line-height:0;}
 
 div.wrapper{display:block; width:100%; margin:0; padding:0; text-align:left;}
 
-.row1, .row1 a{color:#F5DD5D; background-color:#417690;}
-.row2{color:#979797; background-color:#FFFFFF;}
+.row1, .row1 a{color:#000000; background-color:#BEE5EB;}
+.row2{color:#979797; background-color:#BEE5EB;}
 .row2 a{color:#FF9900; background-color:#FFFFFF;}
-.row3, .row3 a{color:#F5DD5D; background-color:#417690;}
+.row3, .row3 a{color:#F5DD5D; background-color:#4682B4;}
 
 /*----------------------------------------------Generalise-------------------------------------*/
 
@@ -77,12 +77,12 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 #header #hgroup h1{font-size:36px;}
 #header #hgroup h2{font-size:13px;}
 
-#header nav{display:block; float:right; margin:10px 0 0 0; padding:20px 0; color:#FFFFFF; background-color:#79AEC8;}
+#header nav{display:block; float:right; margin:10px 0 0 0; padding:20px 0; color:#FFFFFF; background-color:#000000; border: 2px solid black; border-radius: 8px;}
 #header nav ul{padding:0 20px;}
 #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
 #header nav li.last{margin-right:0;}
-#header nav li a{color:#FFFFFF; background-color:#79AEC8;}
-#header nav li a:hover{color:#F5DD5D; background-color:#79AEC8;}
+#header nav li a{color:#FFFFFF; background-color:#000000; text-align:center;}
+#header nav li a:hover{color:#000000; background-color:#79AEC8; text-align:center;}
 
 /*----------------------------------------------Content Area-------------------------------------*/
 
@@ -95,9 +95,9 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 
 #container #slider{}
 #container #slider figure{}
-#container #slider figure img{float:right; width:570px; height:320px;}
-#container #slider figure figcaption{display:block; float:left; width:320px; height:320px; padding:20px; overflow:hidden; color:#333; background-color:#DEDEDE; line-height:1.6em;}
-#container #slider figure figcaption a{color:#FF9900; background-color:#DEDEDE;}
+#container #slider figure img{float:right; width:570px; height:420px;}
+#container #slider figure figcaption{display:block; float:left; width:320px; height:400px; padding:10px; overflow:hidden; color:#333; background-color:#0c5460; line-height:1.6em; border: 2px solid #0c5460; border-radius: 8px;}
+#container #slider figure figcaption a{color:#FF9900; background-color:#0c5460;}
 #container #slider figure h2{font-size:42px; font-weight:normal; font-style:italic; text-transform:none;}
 #container #slider figure footer{}
 
@@ -105,8 +105,8 @@ input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Ti
 #container #slider form {display: block; width: 290px; float: none; margin: auto; padding: 0;}
 #container #slider form input {display: block; float: none; width: 200px; margin: auto; padding: 5px; border:1px solid #666666;}
 #container #slider form #date {float: none; margin: auto;}
-#container #slider form #sf_submit {display: block; float: none; margin:auto; width: 70px; font-size: 12px; font-weight: bold; color:#FFFFFF; background-color: #79AEC8; border: none; cursor: pointer;}
-#container #slider form #register {display: block; float: none; margin: auto; color: #417690; text-align: center;}
+#container #slider form #sf_submit {display: block; float: none; margin:auto; width: 90px; font-size: 14px; font-weight: bold; color:#000000; background-color: #FFFFFF; border: none; cursor: pointer;border: 2px solid; border-radius: 5px;}
+#container #slider form #register {display: block; float: none; margin: auto; color: #FFFFFF; text-align: center;}
 #error {display: block; float: none; margin: auto; color: red; text-align: center;}
 #info {display: block; float: none; margin: auto; color: blue; text-align: center;}
 #showed {display: block; float: none; margin: auto; color: black; text-align: center; font-size: 10px;}

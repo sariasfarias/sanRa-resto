@@ -1,0 +1,14 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+<h1>{{ restaurant.name }}</h1>
+        <h2>{{ restaurant.description }}</h2>
+        <br />
+        {% if restaurant.address != None %}
+        <h2>{{ restaurant.address }}</h2>
+        {% endif%}
+        <br />
+        {% if restaurant.total_capacity != 0 %}
+        <h2>Capacidad disponible {{ restaurant.total_capacity }} personas</h2>
+        {% endif%}

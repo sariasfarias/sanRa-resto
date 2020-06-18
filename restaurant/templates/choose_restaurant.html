@@ -1,0 +1,24 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% include 'navbar_manager.html' %}
+<div class="container pt-3">
+	<li class="list-group-item list-group-item-info" >
+			<div class="row">
+			  	<div class="col text-center">Restaurante</div>
+			</div>
+	    </li>
+{% for object in restaurants %}
+	    <li class="list-group-item list-group-item-action">
+			<div class="row">
+			  	<div class="col-8 text-center">{{ object.restaurant.name }}</div>
+				<a href="{% url 'restaurant:manager' manager.id object.restaurant.id %}"><button class="btn btn-outline-secondary">Ingresar</button></a>
+			</div>
+	    </li>
+{% empty %}
+		<div class="d-flex">
+			<li class="list-group-item list-group-item-light">No hay Restaurantes registrados</li>
+		</div>
+{% endfor %}
+</div>

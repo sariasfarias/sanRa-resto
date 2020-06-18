@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Restaurant</title>
+<title>Restaurantes San Rafael</title>
 <meta charset="utf-8">
     {% load staticfiles %}
 <link rel="stylesheet" href="{% static 'restaurant/layout.css' %}" type="text/css">
@@ -10,12 +10,12 @@
 <div class="wrapper row1">
   <header id="header" class="clear">
     <div id="hgroup">
-      <h1>Restaurant</h1>
-	  <h2>Welcome to our website</h2>
+      <h1>Restaurantes San Rafael</h1>
+	  <h2>Bienvenidos a nuestra web</h2>
     </div>
     <nav>
       <ul>
-        <li class="last"><a href="/admin">Administrator</a></li>
+        <li><a href="/admin">Administrador</a></li>
       </ul>
     </nav>
   </header>
@@ -25,18 +25,22 @@
   <div id="container" class="clear">
     <!-- Slider -->
     <section id="slider" class="clear">
-      <figure><img src="{% static 'restaurant/images/title.jpg' %}" alt="">
+      <figure><img src="{% static 'restaurant/images/logo.png' %}" alt="">
         <figcaption>
           <form action="{% url 'restaurant:login' %}" method="post">
               {% csrf_token %}
               <br />
-              <input name = "username" type="email" placeholder="Email address" required>
               <br />
-              <input name = "password" type="password" placeholder="Password" required>
+              <br />
+              <br />
+              <br />
+              <input name = "username" class="form-control" placeholder="Usuario" required>
+              <br />
+              <input name = "password" class="form-control" type="password" placeholder="Password" required>
               <br />
               <input type="submit" id = "sf_submit" value="Log In">
               <br />
-              <a id = "register" href="{% url 'restaurant:register' %}">Don't have an account? Click here to Register</a>
+              <a id = "register" href="{% url 'restaurant:register' %}">No tenés una cuenta? Contactate con stefania.g.a@outlook.com</a>
               <br />
           </form>
             {% if error_message %}<p id="error">{{ error_message }}</p> {% endif %}
@@ -46,13 +50,6 @@
     </section>
     <!-- / content body -->
   </div>
-</div>
-<!-- Footer -->
-<div class="wrapper row3">
-  <footer id="footer" class="clear">
-    <p class="fl_left">Internet Software Architectures 2015/16</p>
-    <p class="fl_right">Dragan Vidaković RA 134/2012</p>
-  </footer>
 </div>
 </body>
 </html>

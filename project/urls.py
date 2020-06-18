@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from restaurant.views import index
+
 urlpatterns = [
-    url(r'^$', 'restaurant.views.index'),
+    url(r'^$', index, name='index'),
     url(r'^restaurant/', include('restaurant.urls')),
+    url('api/', include('restaurant.api_urls')),
     url(r'^admin/', admin.site.urls),
 ]

@@ -1,0 +1,39 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+<div class="row bg-dark text-white p-3">
+  <div class="col">
+    <div class="bg-dark text-white" href="#">
+      <h5>Bienvenido {{ user.get_full_name }}</h5>
+      <h6>Restaurant {{ restaurant.name }}</h6>
+    </div>
+  </div>
+  <div class="col">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark d-flex flex-row-reverse">
+      <div class="">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restaurant:restaurants-list' %}">Home</a>
+          </li>
+          {% if restaurant.id %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restaurant:manager' manager.id restaurant.id %}">Restaurante</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restaurant:restaurants-capacity-view' manager.id restaurant.id %}">Capacidad</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restaurant:profiling' manager.id %}">Perfil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restaurant:logout' %}">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+
+</div>

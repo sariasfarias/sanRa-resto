@@ -1,6 +1,7 @@
-__author__ = 'Dragan Vidakovic'
-from django.conf.urls import url
+
+from django.conf.urls import url, include
 from . import views
+from .views import ManagerListView
 
 app_name = 'restaurant'
 urlpatterns = [
@@ -10,7 +11,7 @@ urlpatterns = [
     url(r'^register/$', views.register, name='register'),
     url(r'^registration/$', views.registration, name='registration'),
     url(r'^activation/(?P<user_id>[0-9]+)/$', views.activation, name='activation'),
-    url(r'^manager/(?P<manager_id>[0-9]+)/$', views.manager, name='manager'),
+    url(r'^manager/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/$', views.manager, name='manager'),
     url(r'^profiling/(?P<manager_id>[0-9]+)/$', views.profiling, name='profiling'),
     url(r'^updating/(?P<manager_id>[0-9]+)/$', views.updating, name='updating'),
     url(r'^menu/(?P<restaurant_id>[0-9]+)/(?P<manager_id>[0-9]+)/$', views.menu, name='menu'),
@@ -39,4 +40,8 @@ urlpatterns = [
     url(r'^invitefriends/(?P<guest_id>[0-9]+)/(?P<restaurant_id>[0-9]+)/(?P<reservation_id>[0-9]+)/$', views.invitefriends, name='invitefriends'),
     url(r'^showinvitation/(?P<guest_id>[0-9]+)/(?P<reservation_id>[0-9]+)/(?P<visit_id>[0-9]+)/$', views.showinvitation, name='showinvitation'),
     url(r'^acceptinvitation/(?P<guest_id>[0-9]+)/(?P<reservation_id>[0-9]+)/(?P<visit_id>[0-9]+)/$', views.acceptinvitation, name='acceptinvitation'),
+    url(r'^restaurantlist/$', views.managerrestaurantlist, name='restaurants-list'),
+    url(r'^manager/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/reservas/$', views.manager_restaurant_reserv_list, name='reservations-list'),
+    url(r'^manager/capacity/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/capacity/$', views.manager_restaurant_capacity, name='restaurants-capacity'),
+    url(r'^manager/capacity/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/$', views.manager_restaurant_capacity_view, name='restaurants-capacity-view'),
 ]

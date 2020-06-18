@@ -1,0 +1,33 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% include 'navbar_manager.html' %}
+<h1 class="d-flex justify-content-center">Reservas</h1>
+<div class="container pt-3">
+	<br />
+	<li class="list-group-item list-group-item-info" >
+			<div class="row">
+			  	<div class="col text-center">Horario</div>
+                <div class="col text-center">Tiempo de Reserva</div>
+				<div class="col text-center">Invitados</div>
+                 <div class="col text-center">Nombre de la Reserva</div>
+			</div>
+	    </li>
+  {% for object in reservation_list %}
+	    <li class="list-group-item list-group-item-action" >
+			<div class="row">
+			  	<div class="col text-center">{{ object.coming }}</div>
+                <div class="col text-center">{{ object.duration }} horas</div>
+				<div class="col text-center">{{ object.number_guest }} personas</div>
+                 <div class="col text-center">{{ object.name }}</div>
+			</div>
+	    </li>
+{% empty %}
+		<div class="d-flex">
+			<li class="list-group-item list-group-item-light">No hay Reservas registradas</li>
+		</div>
+{% endfor %}
+</div>
+
+

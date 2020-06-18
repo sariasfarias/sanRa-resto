@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Restaurant</title>
-<meta charset="utf-8">
-    {% load staticfiles %}
-<link rel="stylesheet" href="{% static 'restaurant/layout.css' %}" type="text/css">
-</head>
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
 <body>
 <div class="wrapper row1">
   <header id="header" class="clear">
     <div id="hgroup">
-      <h1>Restaurant</h1>
-	  <h2>Welcome to our Website</h2>
+      <h1>Restaurantes San Rafael</h1>
+	  <h2>Bienvenido a nuestra aplicación</h2>
     </div>
     <nav>
       <ul>
@@ -48,13 +44,6 @@
     </section>
     <!-- / content body -->
   </div>
-</div>
-<!-- Footer -->
-<div class="wrapper row3">
-  <footer id="footer" class="clear">
-    <p class="fl_left">Internet Software Architectures 2015/16</p>
-    <p class="fl_right">Dragan Vidaković RA 134/2012</p>
-  </footer>
 </div>
 </body>
 </html>

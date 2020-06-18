@@ -5,7 +5,13 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from .models import Guest, Manager, Table, MenuItem, Restaurant, Visit, Reservation, Friendship, ReservedTables
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from rest_framework import viewsets
+from rest_framework.response import Response
+
+from .models import Guest, Manager, Table, MenuItem, Restaurant, Visit, Reservation, Friendship, ReservedTables, \
+    ReserveByHour
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.utils import timezone
@@ -13,9 +19,13 @@ from datetime import datetime as dt
 import datetime
 import pytz
 from django.db import transaction
+from datetime import datetime, timedelta, time
 
 
 # Homepage
+from .serializers import RestaurantSerializer, MenuItemSerializer, ReserveByHourSerializer, ReservationSerializer
+
+
 def index(request):
     return render(request, 'restaurant/index.html')
 
@@ -42,7 +52,8 @@ def login(request):
                 for m in managers:
                     if m.user == user:
                         auth_login(request, user)
-                        return HttpResponseRedirect(reverse('restaurant:manager', args=(m.id,)))
+                        # return HttpResponseRedirect(reverse('restaurant:manager', args=(m.id,)))
+                        return HttpResponseRedirect(reverse('restaurant:restaurants-list'))
             else:
                 return render(request, 'restaurant/index.html', {
                     'error_message': "Account is not activated!"
@@ -124,9 +135,9 @@ def activation(request, user_id):
 
 # Manager's default page
 @login_required(login_url='/')
-def manager(request, manager_id):
+def manager(request, manager_id, restaurant_id):
     this_manager = get_object_or_404(Manager, pk=manager_id)
-    restaurant = this_manager.restaurant
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
     restaurant_tables = Table.objects.filter(restaurant=restaurant)
     rows = range(1, restaurant.rows+1)
     cols = range(1, restaurant.columns+1)
@@ -715,12 +726,20 @@ def makereservation(request, guest_id, restaurant_id):
             # get duration time
             duration = int(request.POST.get('duration'))
             # calculate ending time
-            ending_time = coming_time + datetime.timedelta(hours=duration)
+            ending_time = coming_time + timedelta(0, hours=duration)
             # filter reservations with same time like new reservation
             taken_tables = 0
             for r in all_reservations:
+                # revisar las horas que van a estar en el local
+                # si no se pasa del maximo
+                # en cada hora
+                # descontar de la capacidad disponible para esa hora
+                #SINO
+                #mostrar en que hora esta full y pedirles hacer otra reserva
+
                 if are_overlap(coming_time, ending_time, r):
-                    taken_tables += get_tables_from_reservation(r)
+                    if this_restaurant.capacity_reserved - r.number_guest < 0:
+                        this_restaurant.capacity_reserved -= r.number_guest
             if taken_tables == this_restaurant.tables:
                 return render(request, 'restaurant/reservation_time.html', context={
                     'guest': this_guest,
@@ -946,3 +965,110 @@ def acceptinvitation(request, guest_id, reservation_id, visit_id):
         'visit': this_visit,
         'info_message': "Invitation Accepted!"
     })
+
+
+class ManagerListView(ListView):
+    model = Restaurant
+    template_name = "choose_restaurant.html"
+
+    @login_required(login_url='/')
+    def get_success_url(self):
+        return HttpResponseRedirect(reverse('restaurant:manager', args=(self.request.user.id,)))
+
+    @login_required(login_url='/')
+    def get_queryset(self):
+        return Manager.objects.filter(user=self.request.user)
+
+
+# Display restaurant list with ratings
+@login_required(login_url='/')
+def managerrestaurantlist(request):
+    manager = Manager.objects.filter(user=request.user).last()
+    restaurants = Manager.objects.filter(user=request.user)
+    return render(request, 'choose_restaurant.html', context={
+        'manager': manager,
+        'restaurants': restaurants
+    })
+
+@login_required(login_url='/')
+def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
+    this_manager = get_object_or_404(Manager, pk=manager_id)
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
+    today = datetime.now().today()
+
+    reservation_list = Reservation.objects.filter(restaurant=restaurant_id, coming=today).order_by('coming')
+    return render(request, 'restaurant/reservation/reservation_list.html', {
+        'manager': this_manager,
+        'restaurant': restaurant,
+        'reservation_list': reservation_list,
+    })
+
+
+@login_required(login_url='/')
+def manager_restaurant_capacity(request, manager_id, restaurant_id):
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
+    if request.method == 'POST':
+        capacity = request.POST.get('capacity')
+        capacity_percent = request.POST.get('capacity_percent')
+        total_capacity = request.POST.get('total_capacity')
+        capacity_reserved = total_capacity
+        restaurant.capacity = capacity
+        restaurant.capacity_percent = capacity_percent
+        restaurant.total_capacity = total_capacity
+        restaurant.capacity_reserved = capacity_reserved
+        restaurant.save()
+
+        reserve_by_hour = ReserveByHour.objects.filter(restaurant=restaurant)
+
+        for reserve in reserve_by_hour:
+            reserve.capacity = total_capacity
+            reserve.save()
+        print("Success! Edited MenuItem: " + str(restaurant))
+        return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id, restaurant_id)))
+
+
+@login_required(login_url='/')
+def manager_restaurant_capacity_view(request, manager_id, restaurant_id):
+    this_restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
+    this_manager = Manager.objects.get(pk=manager_id)
+    return render(request, 'restaurant/capacity.html', {
+        'manager': this_manager,
+        'restaurant': this_restaurant,
+    })
+
+
+@login_required(login_url='/')
+def manager_navbar(request, manager_id, restaurant_id):
+    this_manager = get_object_or_404(Manager, pk=manager_id)
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
+    return render(request, 'restaurant/navbar_manager.html', {
+        'manager': this_manager,
+        'restaurant': restaurant,
+    })
+
+
+class RestaurantViewSet(viewsets.ModelViewSet):
+    queryset = Restaurant.objects.all().order_by('name')
+    serializer_class = RestaurantSerializer
+
+
+class MenuItemViewSet(viewsets.ModelViewSet):
+    queryset = MenuItem.objects.all().order_by('name')
+    serializer_class = MenuItemSerializer
+
+    def list(self, request, **kwargs):
+        if kwargs['restaurant_id']:
+            restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
+            queryset = MenuItem.objects.filter(restaurant=restaurant).order_by('name')
+            serializer = MenuItemSerializer(queryset, many=True, context={'request':request})
+            return Response(serializer.data)
+
+
+class ReserveByHourViewSet(viewsets.ModelViewSet):
+    queryset = ReserveByHour.objects.all().order_by('coming')
+    serializer_class = ReserveByHourSerializer
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all().order_by('name')
+    serializer_class = ReservationSerializer
