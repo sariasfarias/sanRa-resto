@@ -3,8 +3,6 @@ import dj_database_url
 import django_heroku
 
 
-django_heroku.settings(locals())
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -17,3 +15,5 @@ DATABASES = {
 
 DB_FROM_ENV = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(DB_FROM_ENV)
+
+django_heroku.settings(locals())
