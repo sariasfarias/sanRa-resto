@@ -9,7 +9,6 @@ certifi==2020.4.5.1
 chardet==3.0.4
 dj-config-url==0.1.1
 Django==1.11.24
-django-bootstrap4==1.1.1
 django-storages==1.9.1
 djangorestframework==3.11.0
 dropbox==10.2.0
