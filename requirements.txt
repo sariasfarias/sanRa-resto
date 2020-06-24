@@ -11,7 +11,6 @@ dj-config-url==0.1.1
 Django==1.11.24
 django-storages==1.9.1
 djangorestframework==3.11.0
-django-bootstrap4==2.0.1
 dropbox==10.2.0
 idna==2.9
 importlib-metadata==1.6.0
