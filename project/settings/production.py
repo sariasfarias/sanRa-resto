@@ -1,3 +1,5 @@
+import psycopg2
+
 from .base import *
 import dj_database_url
 
@@ -12,5 +14,9 @@ DATABASES = {
     }
 }
 
-DB_FROM_ENV = dj_database_url.config()
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+DB_FROM_ENV = dj_database_url.config(conn_max_age=600, ssl_require=True)
 DATABASES['default'].update(DB_FROM_ENV)
