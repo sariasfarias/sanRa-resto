@@ -1,57 +1,50 @@
-<!DOCTYPE html>
-<html>
-{% extends 'base.html' %}
-
 {% block styles %}
 {% load static %}
+<title>Restaurants San Rafael</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'restaurant/login.css' %}" type="text/css">
+<script src="{% static 'restaurant/login.js' %}" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
-<body>
-<div class="wrapper row1">
-  <header id="header" class="clear">
-    <div id="hgroup">
-      <h1>Restaurantes San Rafael</h1>
-	  <h2>Bienvenidos a nuestra web</h2>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="/admin">Administrador</a></li>
-      </ul>
-    </nav>
-  </header>
-</div>
-<!-- content -->
-<div class="wrapper row2">
-  <div id="container" class="clear">
-    <!-- Slider -->
-    <section id="slider" class="clear">
-      <figure><img src="{% static 'restaurant/images/logo.png' %}" alt="">
-        <figcaption>
-          <form action="{% url 'restaurant:login' %}" method="post">
-              {% csrf_token %}
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <input name = "username" class="form-control" placeholder="Usuario" required>
-              <br />
-              <input name = "password" class="form-control" type="password" placeholder="Password" required>
-              <br />
-              <input type="submit" id = "sf_submit" value="Log In">
-              <br />
-              <a id = "register" href="{% url 'restaurant:register' %}">No tenés una cuenta? Contactate con stefania.g.a@outlook.com</a>
-              <br />
-          </form>
-            {% if error_message %}<p id="error">{{ error_message }}</p> {% endif %}
-            {% if info_message %}<p id="info">{{ info_message }}</p> {% endif %}
-        </figcaption>
-      </figure>
-    </section>
-    <!-- / content body -->
-  </div>
-</div>
-</body>
+
+        <div class="login-reg-panel">
+            <div class="login-info-box">
+                <h2>Have an account?</h2>
+                <p>Holi</p>
+                <label id="label-register" for="log-reg-show">Login</label>
+                <input type="radio" name="active-log-panel" id="log-reg-show"  checked="checked">
+            </div>
+
+            <div class="register-info-box">
+                <h2>Don't have an account?</h2>
+                <p>Lorem ipsum dolor sit amet</p>
+                <label id="label-login" for="log-login-show">Register</label>
+                <input type="radio" name="active-log-panel" id="log-login-show">
+            </div>
+
+            <div class="white-panel">
+                <div class="login-show">
+                    <form action="{% url 'restaurant:login' %}" method="post">
+                    {% csrf_token %}
+                        <h2>LOGIN</h2>
+                        <input name = "username" type="text" placeholder="Usuario">
+                        <input name = "password" type="password" placeholder="Contraseña">
+                        <input type="submit" value="Login">
+                        <a href="">Forgot password?</a>
+                    </form>
+                </div>
+                <div class="register-show">
+                    <h2>REGISTER</h2>
+                    <input type="text" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <input type="password" placeholder="Confirm Password">
+                    <input type="button" value="Register">
+                </div>
+            </div>
+        </div>
+
 {% endblock %}
-</html>
+

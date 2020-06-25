@@ -3,3 +3,4 @@ env/
 venv/
 .idea/
 *.sqlite3
+manage.py
