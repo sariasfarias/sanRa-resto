@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Restaurant</title>
-<meta charset="utf-8">
-    {% load staticfiles %}
+
+{% block styles %}
+{% load static %}
+<title>Restaurants San Rafael</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% load staticfiles %}
 <link rel="stylesheet" href="{% static 'restaurant/layout.css' %}" type="text/css">
-    <script src="{% static 'restaurant/sorttable.js' %}"></script>
-</head>
-<body>
+<script src="{% static 'restaurant/sorttable.js' %}"></script>
+{% endblock %}
+{% block content %}
+<body >
 {% include 'navbar_manager.html' %}
 <!-- content -->
-<div >
-  <div id="container" class="clear">
+<div>
+  <div id="container">
     <!-- Slider -->
     <section id="slider" class="clear">
         {% include 'restaurant_information.html' %}
@@ -58,4 +61,5 @@
   </div>
 </div>
 </body>
-</html>
+{% endblock %}
+
