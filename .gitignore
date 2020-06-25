@@ -1,5 +1,6 @@
 *.pyc
 env/
+*/env/
 venv/
 .idea/
 *.sqlite3
