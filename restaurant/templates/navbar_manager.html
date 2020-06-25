@@ -6,15 +6,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 {% endblock %}
 {% block content %}
-<div class="row bg-danger text-white p-3">
+<div style="background-color:rgb(236, 48, 20, 0.9);" class="row text-white p-3">
   <div class="col">
-    <div class="bg-danger text-light" href="#">
+    <div class="text-light" href="#">
       <h5>Bienvenido {{ user.get_full_name }}</h5>
       <h6>Restaurant {{ restaurant.name }}</h6>
     </div>
   </div>
   <div class="col">
-    <nav class="navbar navbar-expand-sm bg-danger navbar-dark d-flex flex-row-reverse">
+    <nav  class="navbar navbar-expand-sm navbar-dark d-flex flex-row-reverse">
       <div class="">
         <ul class="navbar-nav">
           <li class="nav-item">
