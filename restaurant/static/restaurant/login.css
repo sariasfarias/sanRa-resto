@@ -108,6 +108,18 @@ a{
     float:right;
     cursor:pointer;
 }
+.login-show input[type="submit"] {
+    max-width: 150px;
+    width: 100%;
+    background: #444444;
+    color: #f9f9f9;
+    border: none;
+    padding: 10px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    float:right;
+    cursor:pointer;
+}
 .login-show a{
     display:inline-block;
     padding:10px 0;
