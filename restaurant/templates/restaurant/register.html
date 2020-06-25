@@ -1,6 +1,12 @@
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+{% block styles %}
+{% load static %}
+<title>Restaurants San Rafael</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'restaurant/login.css' %}" type="text/css">
+<script src="{% static 'restaurant/login.js' %}" type="text/javascript"></script>
+{% endblock %}
 
 <body>
 <div class="wrapper row1">
