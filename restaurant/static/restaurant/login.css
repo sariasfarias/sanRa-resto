@@ -163,3 +163,7 @@ a{
   text-decoration:none;
   color:#2c7715;
 }
+
+#center-text h3{text-align: center;}
+#center-text p{text-align: center;}
+#center-text input{text-align: center;}
