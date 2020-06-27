@@ -12,9 +12,9 @@ class TableAdmin(admin.ModelAdmin):
 
 admin.site.register(Table, TableAdmin)
 
-admin.site.register(Guest)
+# admin.site.register(Guest)
 admin.site.register(Manager)
-admin.site.register(Friendship)
+# admin.site.register(Friendship)
 admin.site.register(ReserveByHour)
 
 

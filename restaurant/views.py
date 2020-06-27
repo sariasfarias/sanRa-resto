@@ -1060,7 +1060,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         if kwargs['restaurant_id']:
             restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
             queryset = MenuItem.objects.filter(restaurant=restaurant).order_by('name')
-            serializer = MenuItemSerializer(queryset, many=True, context={'request':request})
+            serializer = MenuItemSerializer(queryset, many=True, context={'request': request})
             return Response(serializer.data)
 
 
@@ -1068,7 +1068,22 @@ class ReserveByHourViewSet(viewsets.ModelViewSet):
     queryset = ReserveByHour.objects.all().order_by('coming')
     serializer_class = ReserveByHourSerializer
 
+    def list(self, request, **kwargs):
+        if kwargs['restaurant_id']:
+            restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
+            queryset = ReserveByHour.objects.filter(restaurant=restaurant).order_by('hour')
+            serializer = ReserveByHourSerializer(queryset, many=True, context={'request': request})
+            return Response(serializer.data)
+
 
 class ReservationViewSet(viewsets.ModelViewSet):
-    queryset = Reservation.objects.all().order_by('name')
+    queryset = Reservation.objects.all().order_by('coming')
     serializer_class = ReservationSerializer
+
+    def list(self, request, **kwargs):
+        if kwargs['restaurant_id']:
+            restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
+            queryset = Reservation.objects.filter(restaurant=restaurant).order_by('coming')
+            serializer = ReservationSerializer(queryset, many=True, context={'request': request})
+
+            return Response(serializer.data)

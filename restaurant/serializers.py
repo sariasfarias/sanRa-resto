@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
-from restaurant.models import Restaurant, MenuItem, Reservation
+from restaurant.models import Restaurant, MenuItem, Reservation, ReserveByHour
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,11 +25,11 @@ class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
 
 class ReserveByHourSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = MenuItem
+        model = ReserveByHour
         fields = ['id', 'capacity', 'currently_free', 'hour', 'restaurant']
 
 
 class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reservation
-        fields = ['id', 'coming', 'duration', 'guest', 'restaurant', 'number_guest']
+        fields = ['id', 'coming', 'duration', 'full_name', 'restaurant', 'number_guest']

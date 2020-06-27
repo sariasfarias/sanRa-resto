@@ -78,7 +78,7 @@ class Manager(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return str(self.user.username) + " " + str(self.restaurant.name)
 
 
 # Friendship between two different users
@@ -99,20 +99,21 @@ Models for restaurant functionality
 
 
 class Reservation(models.Model):
-    coming = models.DateTimeField('reservation time')
+    coming = models.DateTimeField()
     duration = models.IntegerField()
-    guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     number_guest = models.IntegerField(default=0)
+    full_name = models.CharField(max_length=200, null=True, blank=True)
 
-    def __str__(self):
+    '''def __str__(self):
         person = self.guest.user.get_full_name()
         place = self.restaurant.name
         time = self.coming
         return person + " in " + place + " at " + str(time)
-
+    
     def get_finishing_time(self):
         return self.coming + datetime.timedelta(hours=self.duration)
+    '''
 
 
 class ReservedTables(models.Model):
