@@ -40,7 +40,7 @@ class ReserveByHour(models.Model):
     capacity = models.IntegerField(default=0)
     currently_free = models.BooleanField(default=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    hour = models.TimeField(default='00:00')
+    date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return str(self.restaurant) + " " + str(self.capacity)+ " "+ str(self.hour)
@@ -100,10 +100,12 @@ Models for restaurant functionality
 
 class Reservation(models.Model):
     coming = models.DateTimeField()
+    leaving = models.DateTimeField(null=True, blank=True)
     duration = models.IntegerField()
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     number_guest = models.IntegerField(default=0)
     full_name = models.CharField(max_length=200, null=True, blank=True)
+    capacity = models.IntegerField(default=0)
 
     '''def __str__(self):
         person = self.guest.user.get_full_name()

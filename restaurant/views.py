@@ -7,7 +7,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic import ListView
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from .models import Guest, Manager, Table, MenuItem, Restaurant, Visit, Reservation, Friendship, ReservedTables, \
@@ -19,7 +19,7 @@ from datetime import datetime as dt
 import datetime
 import pytz
 from django.db import transaction
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, date
 
 
 # Homepage
@@ -788,7 +788,7 @@ def makereservation(request, guest_id, restaurant_id):
 # check if two reservation periods overlap
 def are_overlap(coming_time, ending_time, this_reservation):
     reservation_start = this_reservation.coming
-    reservation_end = this_reservation.get_finishing_time()
+    reservation_end = this_reservation.leaving
     if coming_time <= reservation_start <= ending_time:
         return True
     else:
@@ -1018,12 +1018,6 @@ def manager_restaurant_capacity(request, manager_id, restaurant_id):
         restaurant.capacity_reserved = capacity_reserved
         restaurant.save()
 
-        reserve_by_hour = ReserveByHour.objects.filter(restaurant=restaurant)
-
-        for reserve in reserve_by_hour:
-            reserve.capacity = total_capacity
-            reserve.save()
-        print("Success! Edited MenuItem: " + str(restaurant))
         return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id, restaurant_id)))
 
 
@@ -1085,5 +1079,43 @@ class ReservationViewSet(viewsets.ModelViewSet):
             restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
             queryset = Reservation.objects.filter(restaurant=restaurant).order_by('coming')
             serializer = ReservationSerializer(queryset, many=True, context={'request': request})
-
             return Response(serializer.data)
+
+    def create(self, request, **kwargs):
+        new_reservation = request.data
+        restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
+        reservation_list = Reservation.objects.filter(restaurant=restaurant).order_by('coming')
+
+        coming = datetime.strptime(new_reservation['coming'], '%Y-%m-%dT%H:%M:%SZ')
+        leaving = datetime.strptime(new_reservation['leaving'], '%Y-%m-%dT%H:%M:%SZ')
+
+        # reservation_list_day = ReserveByHour.objects.filter(date__gte=coming, date__lt=leaving)
+
+        right_now = datetime.now()
+        if coming < right_now:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        init = coming
+        active_reservation = True
+        while init <= leaving:
+            if ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init):
+                reservation_hour = ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init)[0]
+                if reservation_hour.capacity + new_reservation['number_guest'] <= restaurant.total_capacity:
+                    reservation_hour.capacity += new_reservation['number_guest']
+                    reservation_hour.save()
+                else:
+                    active_reservation = False
+            else:
+                reservation_hour = ReserveByHour(
+                    capacity=new_reservation['number_guest'],
+                    currently_free=True,
+                    restaurant=restaurant,
+                    date=init,
+                )
+                reservation_hour.save()
+            init += timedelta(minutes=30)
+
+        if active_reservation:
+            return super().create(request)
+        else:
+            return Response({"Fail": "Horario no disponible"}, status=status.HTTP_400_BAD_REQUEST)

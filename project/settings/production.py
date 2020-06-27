@@ -152,3 +152,5 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 DB_FROM_ENV = dj_database_url.config()
 DATABASES['default'].update(DB_FROM_ENV)
+
+USE_TZ = True

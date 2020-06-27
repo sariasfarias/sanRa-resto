@@ -32,4 +32,4 @@ class ReserveByHourSerializer(serializers.HyperlinkedModelSerializer):
 class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reservation
-        fields = ['id', 'coming', 'duration', 'full_name', 'restaurant', 'number_guest']
+        fields = ['id', 'coming', 'duration', 'full_name', 'restaurant', 'number_guest', 'capacity']
