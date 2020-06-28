@@ -12,14 +12,13 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     address = models.CharField(max_length=200, null=True, blank=True)
-    rows = models.IntegerField()
-    columns = models.IntegerField()
-    tables = models.IntegerField()
     is_ready = models.BooleanField(default=False)
     capacity = models.IntegerField(default=0)
     capacity_percent = models.IntegerField(default=0)
     total_capacity = models.IntegerField(default=0)
     capacity_reserved = models.IntegerField(default=0)
+    open = models.TimeField(null=True, blank=True)
+    closed = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name

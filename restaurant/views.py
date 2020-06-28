@@ -990,13 +990,26 @@ def managerrestaurantlist(request):
         'restaurants': restaurants
     })
 
+
 @login_required(login_url='/')
 def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     this_manager = get_object_or_404(Manager, pk=manager_id)
     restaurant = Restaurant.objects.get(pk=restaurant_id)
     today = datetime.now().today()
+    today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+    # get today open
+    open = today.replace(hour=restaurant.open.hour, minute=restaurant.open.minutes, second=0, microsecond=0)
+    # get today closed
+    if restaurant.closed < restaurant.open:
+        closed = today.replace(day=today.day+1, hour=restaurant.closed.hour, minute=restaurant.closed.minutes,
+                               second=0, microsecond=0)
+    else:
+        closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minutes,
+                               second=0, microsecond=0)
 
-    reservation_list = Reservation.objects.filter(restaurant=restaurant_id, coming=today).order_by('coming')
+    reservation_list = Reservation.objects.filter(restaurant=restaurant).\
+        filter(coming__gte=open, coming__lt=closed).\
+        order_by('coming')
     return render(request, 'restaurant/reservation/reservation_list.html', {
         'manager': this_manager,
         'restaurant': restaurant,
