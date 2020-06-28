@@ -1077,7 +1077,9 @@ class ReservationViewSet(viewsets.ModelViewSet):
     def list(self, request, **kwargs):
         if kwargs['restaurant_id']:
             restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
-            queryset = Reservation.objects.filter(restaurant=restaurant).order_by('coming')
+            right_now = datetime.now()
+            right_now = right_now.replace(hour=0, minute=0, second=0, microsecond=0)
+            queryset = Reservation.objects.filter(restaurant=restaurant).filter(coming__gte=right_now)
             serializer = ReservationSerializer(queryset, many=True, context={'request': request})
             return Response(serializer.data)
 
