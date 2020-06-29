@@ -1105,6 +1105,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         init = coming
         active_reservation = True
+        new_reservation_hour_list = []
         while init <= leaving:
             if ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init):
                 reservation_hour = ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init)[0]
@@ -1120,10 +1121,12 @@ class ReservationViewSet(viewsets.ModelViewSet):
                     restaurant=restaurant,
                     date=init,
                 )
-                reservation_hour.save()
+                new_reservation_hour_list.append(reservation_hour)
             init += timedelta(minutes=30)
 
         if active_reservation:
+            for reservation_hour in new_reservation_hour_list:
+                reservation_hour.save()
             return super().create(request)
         else:
             return Response({"Fail": "Horario no disponible"}, status=status.HTTP_400_BAD_REQUEST)
