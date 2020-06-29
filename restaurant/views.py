@@ -999,7 +999,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
                                second=0, microsecond=0)
 
     reservation_list = Reservation.objects.filter(restaurant=restaurant).\
-        filter(coming__gte=open, coming__lt=closed).\
+        filter(coming__range=(open, closed)).\
         order_by('coming')
     return render(request, 'restaurant/reservation/reservation_list.html', {
         'manager': this_manager,
@@ -1092,8 +1092,6 @@ class ReservationViewSet(viewsets.ModelViewSet):
     def create(self, request, **kwargs):
         new_reservation = request.data
         restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
-        reservation_list = Reservation.objects.filter(restaurant=restaurant).order_by('coming')
-
         coming = datetime.strptime(new_reservation['coming'], '%Y-%m-%dT%H:%M:%SZ')
         leaving = datetime.strptime(new_reservation['leaving'], '%Y-%m-%dT%H:%M:%SZ')
 
