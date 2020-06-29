@@ -136,3 +136,5 @@ DATABASES = {
 }
 
 USE_TZ = True
+
+LOGOUT_REDIRECT_URL = '/'
