@@ -138,15 +138,9 @@ def activation(request, user_id):
 def manager(request, manager_id, restaurant_id):
     this_manager = get_object_or_404(Manager, pk=manager_id)
     restaurant = Restaurant.objects.get(pk=restaurant_id)
-    restaurant_tables = Table.objects.filter(restaurant=restaurant)
-    rows = range(1, restaurant.rows+1)
-    cols = range(1, restaurant.columns+1)
     return render(request, 'restaurant/manager.html', {
         'manager': this_manager,
         'restaurant': restaurant,
-        'tables': restaurant_tables,
-        'rows': rows,
-        'columns': cols
     })
 
 
@@ -362,9 +356,6 @@ def setup(request, restaurant_id, manager_id):
                 return render(request, 'restaurant/tables.html', {
                     'manager': this_manager,
                     'restaurant': this_restaurant,
-                    'rows': r_rows,
-                    'columns': r_cols,
-                    'tables': this_restaurant.tables,
                     'places': r_places,
                     'error_message': message
                 })

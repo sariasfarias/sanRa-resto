@@ -4,14 +4,15 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'restaurant/login.css' %}" type="text/css">
 <link rel="shortcut icon" type="image/png" href="{% static 'restaurant/core/icon.png' %}"/>
 {% endblock %}
 {% block content %}
 <div style="background-color:rgb(236, 48, 20, 0.9);" class="row text-white p-3">
   <div class="col">
     <div class="text-light" href="#">
-      <h5>Bienvenido {{ user.get_full_name }}</h5>
-      <h6>Restaurant {{ restaurant.name }}</h6>
+      <h5>BIENVENIDO {{ user.get_full_name }}</h5>
+      <h6>RESTAURANT {{ restaurant.name }}</h6>
     </div>
   </div>
   <div class="col">
