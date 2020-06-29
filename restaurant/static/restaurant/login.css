@@ -169,7 +169,6 @@ a{
 #center-text input{text-align: center;}
 
 h5, h6 {
-    color: #FCA205;
     font-family: 'Lobster', cursive;
-    text-transform:uppercase;
+     font-size: 20pt;
 }
