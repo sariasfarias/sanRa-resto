@@ -17,8 +17,8 @@
 	<br />
 	<li class="list-group-item list-group-item-secondary" >
 			<div class="row">
-			  	<div class="col text-center">Horario</div>
-                <div class="col text-center">Tiempo de Reserva</div>
+			  	<div class="col text-center">Horario llegada</div>
+                <div class="col text-center">Horario retirada</div>
 				<div class="col text-center">Invitados</div>
                  <div class="col text-center">Nombre de la Reserva</div>
 			</div>
@@ -27,9 +27,9 @@
 	    <li class="list-group-item list-group-item-action" >
 			<div class="row">
 			  	<div class="col text-center">{{ object.coming }}</div>
-                <div class="col text-center">{{ object.duration }} horas</div>
+                <div class="col text-center">{{ object.leaving }}</div>
 				<div class="col text-center">{{ object.number_guest }} personas</div>
-                 <div class="col text-center">{{ object.name }}</div>
+                 <div class="col text-center">{{ object.full_name }}</div>
 			</div>
 	    </li>
 {% empty %}
