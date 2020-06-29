@@ -989,13 +989,13 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     today = datetime.now().today()
     today = today.replace(hour=0, minute=0, second=0, microsecond=0)
     # get today open
-    open = today.replace(hour=restaurant.open.hour, minute=restaurant.open.minutes, second=0, microsecond=0)
+    open = today.replace(hour=restaurant.open.hour, minute=restaurant.open.minute, second=0, microsecond=0)
     # get today closed
     if restaurant.closed < restaurant.open:
-        closed = today.replace(day=today.day+1, hour=restaurant.closed.hour, minute=restaurant.closed.minutes,
+        closed = today.replace(day=today.day+1, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
                                second=0, microsecond=0)
     else:
-        closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minutes,
+        closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
                                second=0, microsecond=0)
 
     reservation_list = Reservation.objects.filter(restaurant=restaurant).\
@@ -1005,6 +1005,8 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
         'manager': this_manager,
         'restaurant': restaurant,
         'reservation_list': reservation_list,
+        'open': open,
+        'closed': closed,
     })
 
 
