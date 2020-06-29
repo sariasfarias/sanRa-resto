@@ -100,7 +100,6 @@ Models for restaurant functionality
 class Reservation(models.Model):
     coming = models.DateTimeField()
     leaving = models.DateTimeField(null=True, blank=True)
-    duration = models.IntegerField()
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     number_guest = models.IntegerField(default=0)
     full_name = models.CharField(max_length=200, null=True, blank=True)
