@@ -109,14 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -153,5 +148,6 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 DB_FROM_ENV = dj_database_url.config()
 DATABASES['default'].update(DB_FROM_ENV)
 
-USE_TZ = True
+USE_TZ = False
+
 LOGOUT_REDIRECT_URL = '/'
