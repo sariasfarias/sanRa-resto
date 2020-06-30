@@ -991,12 +991,10 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     # get today open
     open = today.replace(hour=restaurant.open.hour, minute=restaurant.open.minute, second=0, microsecond=0)
     # get today closed
+    closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
+                           second=0, microsecond=0)
     if restaurant.closed < restaurant.open:
-        closed = today.replace(day=today.day+1, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
-                               second=0, microsecond=0)
-    else:
-        closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
-                               second=0, microsecond=0)
+        closed + timedelta(days=1)
 
     reservation_list = Reservation.objects.filter(restaurant=restaurant).\
         filter(coming__range=(open, closed)).\
@@ -1064,16 +1062,36 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
 
+def get_local_schedule(selected_date, restaurant):
+    today = datetime.now().today()
+    closed = selected_date.replace(hour=restaurant.closed.hour,
+                                   minute=restaurant.closed.minute,
+                                   second=0, microsecond=0)
+    if restaurant.closed < restaurant.open:
+        closed += timedelta(days=1)
+
+    if today < selected_date:
+        open = selected_date.replace(hour=restaurant.open.hour, minute=restaurant.open.minute, second=0,
+                                     microsecond=0)
+        return [open, closed]
+    else:
+        return [today, closed]
+
+
 class ReserveByHourViewSet(viewsets.ModelViewSet):
     queryset = ReserveByHour.objects.all().order_by('coming')
     serializer_class = ReserveByHourSerializer
 
     def list(self, request, **kwargs):
-        if kwargs['restaurant_id']:
-            restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
-            queryset = ReserveByHour.objects.filter(restaurant=restaurant).order_by('hour')
-            serializer = ReserveByHourSerializer(queryset, many=True, context={'request': request})
-            return Response(serializer.data)
+        selected_date = datetime.strptime(request.GET['selected_date'], '%Y-%m-%dT%H:%M:%SZ')
+        if selected_date:
+            if kwargs['restaurant_id']:
+                restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
+                schedule = get_local_schedule(selected_date, restaurant)
+                queryset = ReserveByHour.objects.filter(restaurant=restaurant).\
+                    filter(date__range=(schedule[0], schedule[1])).order_by('date')
+                serializer = ReserveByHourSerializer(queryset, many=True, context={'request': request})
+                return Response(serializer.data)
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
