@@ -1099,7 +1099,7 @@ def get_local_schedule(selected_date, restaurant):
     closed_dinner = selected_date.replace(hour=restaurant.close_dinner.hour,
                                    minute=restaurant.close_dinner.minute,
                                    second=0, microsecond=0)
-    if restaurant.close_dinner < restaurant.open:
+    if restaurant.close_dinner < restaurant.open_lunch:
         closed_dinner += timedelta(days=1)
 
     if today < selected_date:
