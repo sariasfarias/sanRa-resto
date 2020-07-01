@@ -996,7 +996,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     closed_lunch = today.replace(hour=restaurant.close_lunch.hour,
                                  minute=restaurant.close_lunch.minute,
                                  second=0, microsecond=0)
-    if restaurant.close_lunch < restaurant.open:
+    if restaurant.close_lunch < restaurant.open_lunch:
         closed_lunch += timedelta(days=1)
 
     reservation_list = Reservation.objects.filter(restaurant=restaurant).\
@@ -1011,7 +1011,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     closed_dinner = today.replace(day=today.day, hour=restaurant.close_dinner.hour,
                                   minute=restaurant.close_dinner.minute,
                                   second=0, microsecond=0)
-    if restaurant.close_lunch < restaurant.open:
+    if restaurant.close_dinner < restaurant.open_dinner:
         closed_dinner += timedelta(days=1)
 
     reservation_list += Reservation.objects.filter(restaurant=restaurant). \
