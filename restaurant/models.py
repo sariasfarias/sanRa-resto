@@ -17,9 +17,9 @@ class Restaurant(models.Model):
     capacity_percent = models.IntegerField(default=0, null=True, blank=True)
     total_capacity = models.IntegerField(default=0, null=True, blank=True)
     open_lunch = models.TimeField(null=True, blank=True)
-    closed_lunch = models.TimeField(null=True, blank=True)
+    close_lunch = models.TimeField(null=True, blank=True)
     open_dinner = models.TimeField(null=True, blank=True)
-    closed_dinner = models.TimeField(null=True, blank=True)
+    close_dinner = models.TimeField(null=True, blank=True)
     picture = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
