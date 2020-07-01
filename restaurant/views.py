@@ -993,8 +993,8 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
                                minute=restaurant.open_lunch.minute,
                                second=0, microsecond=0)
     # get today closed lunch
-    closed_lunch = today.replace(day=today.day, hour=restaurant.closed_lunch.hour,
-                                 minute=restaurant.closed_lunch.minute,
+    closed_lunch = today.replace(hour=restaurant.close_lunch.hour,
+                                 minute=restaurant.close_lunch.minute,
                                  second=0, microsecond=0)
     if restaurant.closed < restaurant.open:
         closed_lunch += timedelta(days=1)
@@ -1008,8 +1008,8 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
                                 minute=restaurant.open_dinner.minute,
                                 second=0, microsecond=0)
     # get today closed dinner
-    closed_dinner = today.replace(day=today.day, hour=restaurant.closed_dinner.hour,
-                                  minute=restaurant.closed_dinner.minute,
+    closed_dinner = today.replace(day=today.day, hour=restaurant.close_dinner.hour,
+                                  minute=restaurant.close_dinner.minute,
                                   second=0, microsecond=0)
     if restaurant.closed < restaurant.open:
         closed_dinner += timedelta(days=1)
