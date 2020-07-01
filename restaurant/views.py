@@ -1145,6 +1145,42 @@ class ReservationViewSet(viewsets.ModelViewSet):
         if coming < right_now:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+        #obtener llegada y salida
+        reservation_day_coming = coming
+        #today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+        # get today open lunch
+        open_lunch = reservation_day_coming.replace(hour=restaurant.open_lunch.hour,
+                                   minute=restaurant.open_lunch.minute,
+                                   second=0, microsecond=0)
+        # get today closed lunch
+        closed_lunch = reservation_day_coming.replace( hour=restaurant.closed_lunch.hour,
+                                     minute=restaurant.closed_lunch.minute,
+                                     second=0, microsecond=0)
+        if restaurant.closed_lunch < restaurant.open_lunch:
+            closed_lunch += timedelta(days=1)
+
+        # obtener llegada y salida
+        reservation_day_leaving = leaving
+        # get today open dinner
+        open_dinner = reservation_day_leaving.replace(hour=restaurant.open_dinner.hour,
+                                    minute=restaurant.open_dinner.minute,
+                                    second=0, microsecond=0)
+        # get today closed dinner
+        closed_dinner = reservation_day_leaving.replace(hour=restaurant.closed_dinner.hour,
+                                      minute=restaurant.closed_dinner.minute,
+                                      second=0, microsecond=0)
+        if restaurant.closed_dinner < restaurant.open_dinner:
+            closed_dinner += timedelta(days=1)
+
+        if coming < closed_lunch:
+            if coming < open_lunch:
+                return Response({"Fail": "Cambiar horario de reserva"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            if closed_lunch < coming:
+                return Response({"Fail": "Cambiar horario de reserva"}, status=status.HTTP_400_BAD_REQUEST)
+            elif coming < open_dinner:
+                return Response({"Fail": "Cambiar horario de reserva"}, status=status.HTTP_400_BAD_REQUEST)
+
         init = coming
         active_reservation = True
         new_reservation_hour_list = []
@@ -1153,7 +1189,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
                 reservation_hour = ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init)[0]
                 if reservation_hour.capacity + new_reservation['number_guest'] <= restaurant.total_capacity:
                     reservation_hour.capacity += new_reservation['number_guest']
-                    reservation_hour = restaurant.capacity - reservation_hour.capacity
+                    reservation_hour.capacity_free = restaurant.capacity - reservation_hour.capacity
                     reservation_hour.save()
                 else:
                     active_reservation = False
@@ -1174,3 +1210,5 @@ class ReservationViewSet(viewsets.ModelViewSet):
             return super().create(request)
         else:
             return Response({"Fail": "Horario no disponible"}, status=status.HTTP_400_BAD_REQUEST)
+
+
