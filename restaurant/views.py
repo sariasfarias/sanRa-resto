@@ -1149,7 +1149,9 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         right_now = datetime.now()
         if coming < right_now:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response("La reserva no puede ser anterior",
+                            status=status.HTTP_400_BAD_REQUEST
+                            )
 
         # obtener llegada y salida
         reservation_day_coming = coming
@@ -1180,15 +1182,15 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         if coming < closed_lunch:
             if coming < open_lunch:
-                return Response({"Fail": "Restaurant abre "+ str(open_lunch.hour)+":"+str(open_lunch.minute)},
+                return Response("Restaurant abre "+ str(open_lunch.hour)+":"+str(open_lunch.minute),
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
             if closed_dinner:
                 if closed_dinner < coming:
-                    return Response({"Fail": "Restaurant cierra "+str(closed_dinner.hour)+":"+str(closed_dinner.minute)},
+                    return Response("Restaurant cierra "+str(closed_dinner.hour)+":"+str(closed_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
                 elif coming < open_dinner:
-                    return Response({"Fail": "Restaurant abre "+ str(open_dinner.hour)+":"+str(open_dinner.minute)},
+                    return Response("Restaurant abre "+ str(open_dinner.hour)+":"+str(open_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
 
         init = coming
@@ -1219,4 +1221,4 @@ class ReservationViewSet(viewsets.ModelViewSet):
                 reservation_hour.save()
             return super().create(request)
         else:
-            return Response({"Fail": "Horario no disponible"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response("Horario no disponible, revisar Reservas", status=status.HTTP_400_BAD_REQUEST)
