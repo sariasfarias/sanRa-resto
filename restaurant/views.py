@@ -21,7 +21,6 @@ import pytz
 from django.db import transaction
 from datetime import datetime, timedelta, date
 
-
 # Homepage
 from .serializers import RestaurantSerializer, MenuItemSerializer, ReserveByHourSerializer, ReservationSerializer
 
@@ -96,7 +95,7 @@ def registration(request):
             new_user.save()
             # create activation link
             new_user_id = str(new_user.id)
-            link = "http://127.0.0.1:8000/restaurant/activation/"+new_user_id+"/"
+            link = "http://127.0.0.1:8000/restaurant/activation/" + new_user_id + "/"
             message_text = "Click on the following link to complete your registration\n\n" + link
             # sending email
             send_mail('Restaurant - Profile Activation', message_text, 'vdragan1993@gmail.com', [new_user.username],
@@ -132,6 +131,7 @@ def activation(request, user_id):
 
 
 """Manager pages"""
+
 
 # Manager's default page
 @login_required(login_url='/')
@@ -174,7 +174,7 @@ def updating(request, manager_id):
                 updated_user.set_password(password1)
                 updated_user.save()
             print("Success! Updated Manager: " + str(updated_manager))
-            return HttpResponseRedirect(reverse('restaurant:profiling', args=(manager_id, )))
+            return HttpResponseRedirect(reverse('restaurant:profiling', args=(manager_id,)))
         else:
             return render(request, 'restaurant/manager_profile.html', context={
                 'manager': this_manager,
@@ -233,6 +233,7 @@ def edit(request, item_id, restaurant_id, manager_id):
         'edition': this_item
     })
 
+
 # save edited data
 @login_required(login_url='')
 def saveedition(request, item_id, restaurant_id, manager_id):
@@ -249,7 +250,7 @@ def saveedition(request, item_id, restaurant_id, manager_id):
         edit_item.price = price
         edit_item.save()
         print("Success! Edited MenuItem: " + str(edit_item))
-        return HttpResponseRedirect(reverse('restaurant:menu', args=(restaurant_id, manager_id, )))
+        return HttpResponseRedirect(reverse('restaurant:menu', args=(restaurant_id, manager_id,)))
 
 
 # class for sitting schedule setting
@@ -267,12 +268,12 @@ def tables(request, restaurant_id, manager_id):
     if this_restaurant.is_ready:
         return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id,)))
     else:
-        rows = range(1, this_restaurant.rows+1)
-        cols = range(1, this_restaurant.columns+1)
+        rows = range(1, this_restaurant.rows + 1)
+        cols = range(1, this_restaurant.columns + 1)
         places = []
         for i in rows:
             for j in cols:
-                name = (i-1)*this_restaurant.columns + j
+                name = (i - 1) * this_restaurant.columns + j
                 places.append(Place(i, j, name))
         max_tables = this_restaurant.tables
         this_manager = Manager.objects.get(pk=manager_id)
@@ -292,20 +293,20 @@ def setup(request, restaurant_id, manager_id):
     # prepare data for going back
     this_restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
     this_manager = get_object_or_404(Manager, pk=manager_id)
-    r_rows = range(1, this_restaurant.rows+1)
-    r_cols = range(1, this_restaurant.columns+1)
+    r_rows = range(1, this_restaurant.rows + 1)
+    r_cols = range(1, this_restaurant.columns + 1)
     r_places = []
     for i in r_rows:
         for j in r_cols:
-            r_name = (i-1)*this_restaurant.columns + j
+            r_name = (i - 1) * this_restaurant.columns + j
             r_places.append(Place(i, j, r_name))
 
     if this_restaurant.is_ready:
         return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id,)))
     else:
-        rows = range(1, this_restaurant.rows+1)
-        cols = range(1, this_restaurant.columns+1)
-        places = range(1, this_restaurant.tables+1)
+        rows = range(1, this_restaurant.rows + 1)
+        cols = range(1, this_restaurant.columns + 1)
+        places = range(1, this_restaurant.tables + 1)
         tables_order = []
         tables_numbers = []
         if request.method == 'POST':
@@ -363,6 +364,7 @@ def setup(request, restaurant_id, manager_id):
 
 """User pages"""
 
+
 # Guest's default page
 @login_required(login_url='/')
 def guest(request, guest_id):
@@ -392,6 +394,7 @@ def rate(request, guest_id, visit_id):
         'count': count
     })
 
+
 # Process rate
 @login_required(login_url='/')
 def rating(request, guest_id, visit_id):
@@ -401,7 +404,7 @@ def rating(request, guest_id, visit_id):
         this_visit.grade = this_rating
         this_visit.save()
         print("Success! Rated: " + str(this_visit))
-        return HttpResponseRedirect(reverse('restaurant:guest', args=(guest_id, )))
+        return HttpResponseRedirect(reverse('restaurant:guest', args=(guest_id,)))
 
 
 # User friends
@@ -471,7 +474,7 @@ def connect(request, guest_id, connection_id):
     new_friendship = Friendship.objects.create(user=this_guest, friend=new_friend)
     new_friendship.save()
     print("Success! New Friendship: " + str(new_friendship))
-    return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id, )))
+    return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id,)))
 
 
 # Remove friend
@@ -485,14 +488,15 @@ def disconnect(request, guest_id, friend_id):
         if f.friend == this_friend:
             f.delete()
             print("Success! Friendship deleted!")
-            return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id, )))
+            return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id,)))
     # now search friendships where guest is friend
     friend_friendship = Friendship.objects.filter(friend=this_guest)
     for f in friend_friendship:
         if f.user == this_friend:
             f.delete()
             print("Success! Friendship deleted!")
-            return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id, )))
+            return HttpResponseRedirect(reverse('restaurant:friends', args=(guest_id,)))
+
 
 # User profile
 @login_required(login_url='/')
@@ -506,6 +510,7 @@ def profile(request, guest_id):
         'guest': this_guest,
         'friends': friends_list
     })
+
 
 # Update User profile info
 @login_required(login_url='/')
@@ -532,7 +537,7 @@ def update(request, guest_id):
                 updated_user.set_password(password1)
                 updated_user.save()
             print("Success! Updated User: " + str(updated_user))
-            return HttpResponseRedirect(reverse('restaurant:profile', args=(guest_id, )))
+            return HttpResponseRedirect(reverse('restaurant:profile', args=(guest_id,)))
         else:
             friends_list = get_friends_list(this_guest)
             return render(request, 'restaurant/profile.html', context={
@@ -623,7 +628,7 @@ def get_restaurant_rating(this_restaurant):
     if c == 0:
         return 0
     else:
-        r = s/c
+        r = s / c
         return round(r, 2)
 
 
@@ -645,7 +650,7 @@ def get_restaurants_friends_rating(this_restaurant, this_guest):
     if c == 0:
         return 0
     else:
-        r = s/c
+        r = s / c
         return round(r, 2)
 
 
@@ -725,8 +730,8 @@ def makereservation(request, guest_id, restaurant_id):
                 # si no se pasa del maximo
                 # en cada hora
                 # descontar de la capacidad disponible para esa hora
-                #SINO
-                #mostrar en que hora esta full y pedirles hacer otra reserva
+                # SINO
+                # mostrar en que hora esta full y pedirles hacer otra reserva
 
                 if are_overlap(coming_time, ending_time, r):
                     if this_restaurant.capacity_reserved - r.number_guest < 0:
@@ -757,8 +762,8 @@ def makereservation(request, guest_id, restaurant_id):
                         single_table.currently_free = True
                         single_table.save()
                 # tables are ready
-                rows = range(1, this_restaurant.rows+1)
-                columns = range(1, this_restaurant.columns+1)
+                rows = range(1, this_restaurant.rows + 1)
+                columns = range(1, this_restaurant.columns + 1)
                 # create new reservation object
                 new_reservation = Reservation.objects.create(coming=coming_time, duration=duration, guest=this_guest,
                                                              restaurant=this_restaurant)
@@ -858,7 +863,8 @@ def reservetables(request, guest_id, restaurant_id, reservation_id):
 
         # if everything was fine create new visit object
         stops = this_reservation.get_finishing_time()
-        new_visit = Visit.objects.create(ending_time=stops, confirmed=True, reservation=this_reservation, guest=this_guest)
+        new_visit = Visit.objects.create(ending_time=stops, confirmed=True, reservation=this_reservation,
+                                         guest=this_guest)
         new_visit.save()
         print("Success! Created new visit: " + str(new_visit))
         list_of_friends = get_friends_list(this_guest)
@@ -868,7 +874,6 @@ def reservetables(request, guest_id, restaurant_id, reservation_id):
             'reservation': this_reservation,
             'friends': list_of_friends
         })
-
 
 
 @login_required(login_url='')
@@ -886,7 +891,7 @@ def invitefriends(request, guest_id, restaurant_id, reservation_id):
                 selected_friends.append(f)
         # if there is no selected friends, send to my reservations
         if len(selected_friends) == 0:
-            return HttpResponseRedirect(reverse('restaurant:myreservations', args=(guest_id, )))
+            return HttpResponseRedirect(reverse('restaurant:myreservations', args=(guest_id,)))
         else:
             # send mail invitations and create visit objects
             stops = this_reservation.get_finishing_time()
@@ -899,14 +904,15 @@ def invitefriends(request, guest_id, restaurant_id, reservation_id):
                 print("Success! Created new visit: " + str(new_visit))
                 # send_mail
                 message_text = "You got an invitation to visit Restaurant. Login and follow link to see more:\n\n"
-                link_text = "http://127.0.0.1:8000/restaurant/showinvitation/"+str(friend_guest.id)+"/"+reservation_id+"/"+str(new_visit.id)+"/"
+                link_text = "http://127.0.0.1:8000/restaurant/showinvitation/" + str(
+                    friend_guest.id) + "/" + reservation_id + "/" + str(new_visit.id) + "/"
                 text_to_send = message_text + link_text
-                send_mail('Restaurant - Invitation', text_to_send, 'vdragan1993@gmail.com', [friend_guest.user.username],
+                send_mail('Restaurant - Invitation', text_to_send, 'vdragan1993@gmail.com',
+                          [friend_guest.user.username],
                           fail_silently=False)
                 print("Success! Mail sent to: " + str(friend_guest))
             # all finished
-            return HttpResponseRedirect(reverse('restaurant:myreservations', args=(guest_id, )))
-
+            return HttpResponseRedirect(reverse('restaurant:myreservations', args=(guest_id,)))
 
 
 @login_required(login_url='/')
@@ -999,8 +1005,8 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     if restaurant.close_lunch < restaurant.open_lunch:
         closed_lunch += timedelta(days=1)
 
-    reservation_list = Reservation.objects.filter(restaurant=restaurant).\
-        filter(coming__range=(open_lunch, closed_lunch)).\
+    reservation_list = Reservation.objects.filter(restaurant=restaurant). \
+        filter(coming__range=(open_lunch, closed_lunch)). \
         order_by('coming')
 
     # get today open dinner
@@ -1090,18 +1096,18 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 def get_local_schedule(selected_date, restaurant):
     today = datetime.now().today()
-    closed = selected_date.replace(hour=restaurant.close.hour,
-                                   minute=restaurant.close.minute,
+    closed_dinner = selected_date.replace(hour=restaurant.close_dinner.hour,
+                                   minute=restaurant.close_dinner.minute,
                                    second=0, microsecond=0)
-    if restaurant.close < restaurant.open:
-        closed += timedelta(days=1)
+    if restaurant.close_dinner < restaurant.open:
+        closed_dinner += timedelta(days=1)
 
     if today < selected_date:
-        open = selected_date.replace(hour=restaurant.open.hour, minute=restaurant.open.minute, second=0,
+        open = selected_date.replace(hour=restaurant.open_lunch.hour, minute=restaurant.open_lunch.minute, second=0,
                                      microsecond=0)
-        return [open, closed]
+        return [open, closed_dinner]
     else:
-        return [today, closed]
+        return [today, closed_dinner]
 
 
 class ReserveByHourViewSet(viewsets.ModelViewSet):
@@ -1114,7 +1120,7 @@ class ReserveByHourViewSet(viewsets.ModelViewSet):
             if kwargs['restaurant_id']:
                 restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
                 schedule = get_local_schedule(selected_date, restaurant)
-                queryset = ReserveByHour.objects.filter(restaurant=restaurant).\
+                queryset = ReserveByHour.objects.filter(restaurant=restaurant). \
                     filter(date__range=(schedule[0], schedule[1])).order_by('date')
                 serializer = ReserveByHourSerializer(queryset, many=True, context={'request': request})
                 return Response(serializer.data)
@@ -1145,17 +1151,17 @@ class ReservationViewSet(viewsets.ModelViewSet):
         if coming < right_now:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        #obtener llegada y salida
+        # obtener llegada y salida
         reservation_day_coming = coming
-        #today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+        # today = today.replace(hour=0, minute=0, second=0, microsecond=0)
         # get today open lunch
         open_lunch = reservation_day_coming.replace(hour=restaurant.open_lunch.hour,
-                                   minute=restaurant.open_lunch.minute,
-                                   second=0, microsecond=0)
+                                                    minute=restaurant.open_lunch.minute,
+                                                    second=0, microsecond=0)
         # get today closed lunch
-        closed_lunch = reservation_day_coming.replace( hour=restaurant.close_lunch.hour,
-                                     minute=restaurant.close_lunch.minute,
-                                     second=0, microsecond=0)
+        closed_lunch = reservation_day_coming.replace(hour=restaurant.close_lunch.hour,
+                                                      minute=restaurant.close_lunch.minute,
+                                                      second=0, microsecond=0)
         if restaurant.close_lunch < restaurant.open_lunch:
             closed_lunch += timedelta(days=1)
 
@@ -1163,12 +1169,12 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reservation_day_leaving = leaving
         # get today open dinner
         open_dinner = reservation_day_leaving.replace(hour=restaurant.open_dinner.hour,
-                                    minute=restaurant.open_dinner.minute,
-                                    second=0, microsecond=0)
+                                                      minute=restaurant.open_dinner.minute,
+                                                      second=0, microsecond=0)
         # get today closed dinner
         closed_dinner = reservation_day_leaving.replace(hour=restaurant.close_dinner.hour,
-                                      minute=restaurant.close_dinner.minute,
-                                      second=0, microsecond=0)
+                                                        minute=restaurant.close_dinner.minute,
+                                                        second=0, microsecond=0)
         if restaurant.close_dinner < restaurant.open_dinner:
             closed_dinner += timedelta(days=1)
 
@@ -1210,5 +1216,3 @@ class ReservationViewSet(viewsets.ModelViewSet):
             return super().create(request)
         else:
             return Response({"Fail": "Horario no disponible"}, status=status.HTTP_400_BAD_REQUEST)
-
-
