@@ -1014,7 +1014,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     if restaurant.close_dinner < restaurant.open_dinner:
         closed_dinner += timedelta(days=1)
 
-    reservation_list += Reservation.objects.filter(restaurant=restaurant). \
+    reservation_list |= Reservation.objects.filter(restaurant=restaurant). \
         filter(coming__range=(open_dinner, closed_dinner)). \
         order_by('coming')
 
