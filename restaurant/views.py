@@ -1153,10 +1153,10 @@ class ReservationViewSet(viewsets.ModelViewSet):
                                    minute=restaurant.open_lunch.minute,
                                    second=0, microsecond=0)
         # get today closed lunch
-        closed_lunch = reservation_day_coming.replace( hour=restaurant.closed_lunch.hour,
-                                     minute=restaurant.closed_lunch.minute,
+        closed_lunch = reservation_day_coming.replace( hour=restaurant.close_lunch.hour,
+                                     minute=restaurant.close_lunch.minute,
                                      second=0, microsecond=0)
-        if restaurant.closed_lunch < restaurant.open_lunch:
+        if restaurant.close_lunch < restaurant.open_lunch:
             closed_lunch += timedelta(days=1)
 
         # obtener llegada y salida
@@ -1166,10 +1166,10 @@ class ReservationViewSet(viewsets.ModelViewSet):
                                     minute=restaurant.open_dinner.minute,
                                     second=0, microsecond=0)
         # get today closed dinner
-        closed_dinner = reservation_day_leaving.replace(hour=restaurant.closed_dinner.hour,
-                                      minute=restaurant.closed_dinner.minute,
+        closed_dinner = reservation_day_leaving.replace(hour=restaurant.close_dinner.hour,
+                                      minute=restaurant.close_dinner.minute,
                                       second=0, microsecond=0)
-        if restaurant.closed_dinner < restaurant.open_dinner:
+        if restaurant.close_dinner < restaurant.open_dinner:
             closed_dinner += timedelta(days=1)
 
         if coming < closed_lunch:
