@@ -1090,10 +1090,10 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 def get_local_schedule(selected_date, restaurant):
     today = datetime.now().today()
-    closed = selected_date.replace(hour=restaurant.closed.hour,
-                                   minute=restaurant.closed.minute,
+    closed = selected_date.replace(hour=restaurant.close.hour,
+                                   minute=restaurant.close.minute,
                                    second=0, microsecond=0)
-    if restaurant.closed < restaurant.open:
+    if restaurant.close < restaurant.open:
         closed += timedelta(days=1)
 
     if today < selected_date:
