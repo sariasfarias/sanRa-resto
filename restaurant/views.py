@@ -988,23 +988,44 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     restaurant = Restaurant.objects.get(pk=restaurant_id)
     today = datetime.now().today()
     today = today.replace(hour=0, minute=0, second=0, microsecond=0)
-    # get today open
-    open = today.replace(hour=restaurant.open.hour, minute=restaurant.open.minute, second=0, microsecond=0)
-    # get today closed
-    closed = today.replace(day=today.day, hour=restaurant.closed.hour, minute=restaurant.closed.minute,
-                           second=0, microsecond=0)
+    # get today open lunch
+    open_lunch = today.replace(hour=restaurant.open_lunch.hour,
+                               minute=restaurant.open_lunch.minute,
+                               second=0, microsecond=0)
+    # get today closed lunch
+    closed_lunch = today.replace(day=today.day, hour=restaurant.closed_lunch.hour,
+                                 minute=restaurant.closed_lunch.minute,
+                                 second=0, microsecond=0)
     if restaurant.closed < restaurant.open:
-        closed + timedelta(days=1)
+        closed_lunch += timedelta(days=1)
 
     reservation_list = Reservation.objects.filter(restaurant=restaurant).\
-        filter(coming__range=(open, closed)).\
+        filter(coming__range=(open_lunch, closed_lunch)).\
         order_by('coming')
+
+    # get today open dinner
+    open_dinner = today.replace(hour=restaurant.open_dinner.hour,
+                                minute=restaurant.open_dinner.minute,
+                                second=0, microsecond=0)
+    # get today closed dinner
+    closed_dinner = today.replace(day=today.day, hour=restaurant.closed_dinner.hour,
+                                  minute=restaurant.closed_dinner.minute,
+                                  second=0, microsecond=0)
+    if restaurant.closed < restaurant.open:
+        closed_dinner += timedelta(days=1)
+
+    reservation_list += Reservation.objects.filter(restaurant=restaurant). \
+        filter(coming__range=(open_dinner, closed_dinner)). \
+        order_by('coming')
+
     return render(request, 'restaurant/reservation/reservation_list.html', {
         'manager': this_manager,
         'restaurant': restaurant,
         'reservation_list': reservation_list,
-        'open': open,
-        'closed': closed,
+        'open_lunch': open_lunch,
+        'closed_lunch': closed_lunch,
+        'open_dinner': open_dinner,
+        'closed_dinner': closed_dinner,
     })
 
 
@@ -1021,6 +1042,11 @@ def manager_restaurant_capacity(request, manager_id, restaurant_id):
         restaurant.total_capacity = total_capacity
         restaurant.capacity_reserved = capacity_reserved
         restaurant.save()
+
+        reservation_by_hour_list = ReserveByHour.objects.filter(restaurant=restaurant)
+
+        for reservation_by_hour in reservation_by_hour_list:
+            reservation_by_hour_list.capacity_free = capacity - reservation_by_hour.capacity
 
         return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id, restaurant_id)))
 
@@ -1127,12 +1153,14 @@ class ReservationViewSet(viewsets.ModelViewSet):
                 reservation_hour = ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init)[0]
                 if reservation_hour.capacity + new_reservation['number_guest'] <= restaurant.total_capacity:
                     reservation_hour.capacity += new_reservation['number_guest']
+                    reservation_hour = restaurant.capacity - reservation_hour.capacity
                     reservation_hour.save()
                 else:
                     active_reservation = False
             else:
                 reservation_hour = ReserveByHour(
                     capacity=new_reservation['number_guest'],
+                    capacity_free=restaurant.capacity - new_reservation['number_guest'],
                     currently_free=True,
                     restaurant=restaurant,
                     date=init,

@@ -16,8 +16,10 @@ class Restaurant(models.Model):
     capacity = models.IntegerField(default=0, null=True, blank=True)
     capacity_percent = models.IntegerField(default=0, null=True, blank=True)
     total_capacity = models.IntegerField(default=0, null=True, blank=True)
-    open = models.TimeField(null=True, blank=True)
-    closed = models.TimeField(null=True, blank=True)
+    open_lunch = models.TimeField(null=True, blank=True)
+    closed_lunch = models.TimeField(null=True, blank=True)
+    open_dinner = models.TimeField(null=True, blank=True)
+    closed_dinner = models.TimeField(null=True, blank=True)
     picture = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
@@ -37,6 +39,7 @@ class MenuItem(models.Model):
 
 class ReserveByHour(models.Model):
     capacity = models.IntegerField(default=0)
+    capacity_free = models.IntegerField(default=0)
     currently_free = models.BooleanField(default=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     date = models.DateTimeField(null=True, blank=True)

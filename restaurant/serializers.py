@@ -14,7 +14,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Restaurant
-        fields = ['id', 'name', 'description', 'address', 'picture']
+        fields = ['id', 'name', 'description', 'address', 'picture',
+                  'open_lunch', 'open_dinner', 'close_dinner', 'close_lunch']
 
 
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +27,7 @@ class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
 class ReserveByHourSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ReserveByHour
-        fields = ['id', 'capacity', 'currently_free', 'date', 'restaurant']
+        fields = ['id', 'capacity', 'capacity_free', 'currently_free', 'date', 'restaurant']
 
 
 class ReservationSerializer(serializers.HyperlinkedModelSerializer):
