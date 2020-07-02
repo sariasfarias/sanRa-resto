@@ -993,6 +993,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     this_manager = get_object_or_404(Manager, pk=manager_id)
     restaurant = Restaurant.objects.get(pk=restaurant_id)
     today = datetime.now().today()
+    today += timedelta(hours=-3)
     today = today.replace(hour=0, minute=0, second=0, microsecond=0)
     # get today open lunch
     open_lunch = today.replace(hour=restaurant.open_lunch.hour,
