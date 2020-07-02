@@ -1102,9 +1102,7 @@ def get_local_schedule(selected_date, restaurant):
     if restaurant.close_dinner < restaurant.open_lunch:
         closed_dinner += timedelta(days=1)
 
-    open = selected_date.replace(hour=restaurant.open_lunch.hour, minute=restaurant.open_lunch.minute,
-                                 second=0, microsecond=0)
-    return [open, closed_dinner]
+    return [selected_date, closed_dinner]
 
 
 class ReserveByHourViewSet(viewsets.ModelViewSet):
@@ -1117,10 +1115,43 @@ class ReserveByHourViewSet(viewsets.ModelViewSet):
             if kwargs['restaurant_id']:
                 restaurant = Restaurant.objects.get(pk=kwargs['restaurant_id'])
                 schedule = get_local_schedule(selected_date, restaurant)
+                insert_hour(schedule, restaurant)
                 queryset = ReserveByHour.objects.filter(restaurant=restaurant). \
                     filter(date__range=(schedule[0], schedule[1])).order_by('date')
                 serializer = ReserveByHourSerializer(queryset, many=True, context={'request': request})
                 return Response(serializer.data)
+
+
+def insert_hour(schedule, restaurant):
+    coming = schedule[0]
+
+    open_lunch = schedule[0].replace(hour=restaurant.open_lunch.hour, minute=restaurant.open_lunch.minute,
+                               second=0, microsecond=0)
+    closed_lunch = schedule[0].replace(hour=restaurant.close_lunch.hour, minute=restaurant.close_lunch.minute,
+                               second=0, microsecond=0)
+
+    open_dinner = schedule[0].replace(hour=restaurant.open_dinner.hour, minute=restaurant.open_dinner.minute,
+                                     second=0, microsecond=0)
+    closed_dinner = schedule[0].replace(hour=restaurant.close_dinner.hour, minute=restaurant.close_dinner.minute,
+                                       second=0, microsecond=0)
+    if coming < closed_lunch:
+        insert_files(open_lunch, closed_lunch, restaurant)
+    if open_dinner:
+        insert_files(open_dinner, closed_dinner, restaurant)
+
+
+def insert_files(init, closed, restaurant):
+    while init <= closed:
+        if not ReserveByHour.objects.filter(restaurant=restaurant).filter(date=init):
+            reservation_hour = ReserveByHour(
+                capacity=0,
+                capacity_free=restaurant.capacity,
+                currently_free=True,
+                restaurant=restaurant,
+                date=init,
+            )
+            reservation_hour.save()
+        init += timedelta(minutes=30)
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
