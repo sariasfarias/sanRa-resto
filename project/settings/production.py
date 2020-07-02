@@ -116,20 +116,12 @@ USE_L10N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-
-
-
 # Email configuration
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'vdragan1993@gmail.com'
 EMAIL_HOST_PASSWORD = ''
-
-
-
-
-
 
 DATABASES = {
     'default': {
@@ -149,5 +141,5 @@ DB_FROM_ENV = dj_database_url.config()
 DATABASES['default'].update(DB_FROM_ENV)
 
 USE_TZ = True
-TIME_ZONE  = "America/Argentina/Buenos_Aires"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 LOGOUT_REDIRECT_URL = '/'
