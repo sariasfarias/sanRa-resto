@@ -1224,7 +1224,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
                     return Response("Restaurant abre "+ str(open_dinner.hour)+":"+str(open_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
 
-        if closed_lunch < leaving:
+        if closed_lunch < leaving and coming < open_lunch:
             return Response("Restaurant cierra " + str(closed_lunch.hour) + ":" + str(closed_lunch.minute),
                             status=status.HTTP_400_BAD_REQUEST)
         elif closed_dinner:
