@@ -1139,14 +1139,14 @@ def insert_hour(schedule, restaurant):
                                      second=0, microsecond=0)
     closed_lunch = schedule[0].replace(hour=restaurant.close_lunch.hour, minute=restaurant.close_lunch.minute,
                                        second=0, microsecond=0)
-
-    open_dinner = schedule[0].replace(hour=restaurant.open_dinner.hour, minute=restaurant.open_dinner.minute,
-                                      second=0, microsecond=0)
-    closed_dinner = schedule[0].replace(hour=restaurant.close_dinner.hour, minute=restaurant.close_dinner.minute,
-                                        second=0, microsecond=0)
+    if restaurant.open_dinner and restaurant.close_dinner:
+        open_dinner = schedule[0].replace(hour=restaurant.open_dinner.hour, minute=restaurant.open_dinner.minute,
+                                          second=0, microsecond=0)
+        closed_dinner = schedule[0].replace(hour=restaurant.close_dinner.hour, minute=restaurant.close_dinner.minute,
+                                            second=0, microsecond=0)
     if coming < closed_lunch:
         insert_files(open_lunch, closed_lunch, restaurant)
-    if open_dinner:
+    if restaurant.open_dinner and restaurant.close_dinner:
         insert_files(open_dinner, closed_dinner, restaurant)
 
 
