@@ -141,5 +141,6 @@ DB_FROM_ENV = dj_database_url.config()
 DATABASES['default'].update(DB_FROM_ENV)
 
 USE_TZ = True
-TIME_ZONE = "America/Argentina/Buenos_Aires"
+TIME_ZONE = 'UTC'
+
 LOGOUT_REDIRECT_URL = '/'
