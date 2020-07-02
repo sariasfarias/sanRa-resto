@@ -12,7 +12,9 @@
 {% block content %}
 {% include 'navbar_manager.html' %}
 <h1 class="d-flex justify-content-center">Reservas</h1>
+{% if open_lunch %}
 <h5 class="d-flex justify-content-center">{{ open_lunch }}  -  {{ closed_lunch }}</h5>
+{% endif %}
 {% if open_dinner %}
 <h5 class="d-flex justify-content-center">{{ open_dinner }}  -  {{ closed_dinner }}</h5>
 {% endif %}
