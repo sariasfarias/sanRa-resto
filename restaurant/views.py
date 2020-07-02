@@ -1099,9 +1099,15 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 
 def get_local_schedule(selected_date, restaurant):
-    closed_dinner = selected_date.replace(hour=restaurant.close_dinner.hour,
-                                   minute=restaurant.close_dinner.minute,
-                                   second=0, microsecond=0)
+    if restaurant.close_dinner:
+        closed_dinner = selected_date.replace(hour=restaurant.close_dinner.hour,
+                                              minute=restaurant.close_dinner.minute,
+                                              second=0, microsecond=0)
+    else:
+        closed_dinner = selected_date.replace(hour=restaurant.close_lunch.hour,
+                                              minute=restaurant.close_lunch.minute,
+                                              second=0, microsecond=0)
+
     if restaurant.close_dinner < restaurant.open_lunch:
         closed_dinner += timedelta(days=1)
 
@@ -1129,14 +1135,14 @@ def insert_hour(schedule, restaurant):
     coming = schedule[0]
 
     open_lunch = schedule[0].replace(hour=restaurant.open_lunch.hour, minute=restaurant.open_lunch.minute,
-                               second=0, microsecond=0)
+                                     second=0, microsecond=0)
     closed_lunch = schedule[0].replace(hour=restaurant.close_lunch.hour, minute=restaurant.close_lunch.minute,
-                               second=0, microsecond=0)
+                                       second=0, microsecond=0)
 
     open_dinner = schedule[0].replace(hour=restaurant.open_dinner.hour, minute=restaurant.open_dinner.minute,
-                                     second=0, microsecond=0)
+                                      second=0, microsecond=0)
     closed_dinner = schedule[0].replace(hour=restaurant.close_dinner.hour, minute=restaurant.close_dinner.minute,
-                                       second=0, microsecond=0)
+                                        second=0, microsecond=0)
     if coming < closed_lunch:
         insert_files(open_lunch, closed_lunch, restaurant)
     if open_dinner:
@@ -1213,15 +1219,15 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         if coming < closed_lunch:
             if coming < open_lunch:
-                return Response("Restaurant abre "+ str(open_lunch.hour)+":"+str(open_lunch.minute),
+                return Response("Restaurant abre " + str(open_lunch.hour) + ":" + str(open_lunch.minute),
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
             if closed_dinner:
                 if closed_dinner < coming:
-                    return Response("Restaurant cierra "+str(closed_dinner.hour)+":"+str(closed_dinner.minute),
+                    return Response("Restaurant cierra " + str(closed_dinner.hour) + ":" + str(closed_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
                 elif coming < open_dinner:
-                    return Response("Restaurant abre "+ str(open_dinner.hour)+":"+str(open_dinner.minute),
+                    return Response("Restaurant abre " + str(open_dinner.hour) + ":" + str(open_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
 
         if closed_lunch < leaving and coming < open_lunch:
