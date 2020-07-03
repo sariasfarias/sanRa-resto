@@ -994,6 +994,10 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     restaurant = Restaurant.objects.get(pk=restaurant_id)
     today = datetime.now().today()
     today += timedelta(hours=-3)
+
+    # inicialization values
+    open_dinner = None
+    closed_dinner = None
     # get today open lunch
     open_lunch = today.replace(hour=restaurant.open_lunch.hour,
                                minute=restaurant.open_lunch.minute,
@@ -1005,6 +1009,7 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     if restaurant.close_lunch < restaurant.open_lunch:
         closed_lunch += timedelta(days=1)
 
+    reservation_list = None
     if today < closed_lunch + timedelta(hours=1):
         reservation_list = Reservation.objects.filter(restaurant=restaurant). \
             filter(coming__range=(open_lunch, closed_lunch)). \
@@ -1012,21 +1017,22 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
     else:
         open_lunch = None
         closed_lunch = None
-        # get today open dinner
-        open_dinner = today.replace(hour=restaurant.open_dinner.hour,
-                                    minute=restaurant.open_dinner.minute,
-                                    second=0, microsecond=0)
-        # get today closed dinner
-        closed_dinner = today.replace(day=today.day, hour=restaurant.close_dinner.hour,
-                                      minute=restaurant.close_dinner.minute,
-                                      second=0, microsecond=0)
-        if open_dinner and closed_dinner:
+        if restaurant.open_dinner and restaurant.close_dinner:
+            # get today open dinner
+            open_dinner = today.replace(hour=restaurant.open_dinner.hour,
+                                        minute=restaurant.open_dinner.minute,
+                                        second=0, microsecond=0)
+            # get today closed dinner
+            closed_dinner = today.replace(day=today.day, hour=restaurant.close_dinner.hour,
+                                          minute=restaurant.close_dinner.minute,
+                                          second=0, microsecond=0)
             if restaurant.close_dinner < restaurant.open_dinner:
                 closed_dinner += timedelta(days=1)
 
-            reservation_list = Reservation.objects.filter(restaurant=restaurant). \
-                filter(coming__range=(open_dinner, closed_dinner)). \
-                order_by('coming')
+            if today < closed_dinner + timedelta(hours=1):
+                reservation_list = Reservation.objects.filter(restaurant=restaurant). \
+                    filter(coming__range=(open_dinner, closed_dinner)). \
+                    order_by('coming')
 
     return render(request, 'restaurant/reservation/reservation_list.html', {
         'manager': this_manager,
