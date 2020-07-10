@@ -21,6 +21,7 @@ class Restaurant(models.Model):
     open_dinner = models.TimeField(null=True, blank=True)
     close_dinner = models.TimeField(null=True, blank=True)
     picture = models.CharField(max_length=500, null=True, blank=True)
+    telephone = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -107,6 +108,8 @@ class Reservation(models.Model):
     number_guest = models.IntegerField(default=0)
     full_name = models.CharField(max_length=200, null=True, blank=True)
     capacity = models.IntegerField(default=0)
+    dni = models.CharField(max_length=20, null=True, blank=True)
+    cellphone = models.CharField(max_length=200, null=True, blank=True)
 
     '''def __str__(self):
         person = self.guest.user.get_full_name()
