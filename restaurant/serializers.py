@@ -15,7 +15,7 @@ class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Restaurant
         fields = ['id', 'name', 'description', 'address', 'picture',
-                  'open_lunch', 'open_dinner', 'close_dinner', 'close_lunch']
+                  'open_lunch', 'open_dinner', 'close_dinner', 'close_lunch', 'telephone']
 
 
 class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
