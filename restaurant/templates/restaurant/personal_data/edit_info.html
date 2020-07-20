@@ -1,0 +1,44 @@
+{% load static %}
+<title>Restaurants San Rafael</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'restaurant/login.css' %}" type="text/css">
+<script src="{% static 'restaurant/login.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+<div id="container" class="container pt-3" >
+    <div class="row" >
+        <div class="col-3" >
+        </div>
+
+        <div id="center-text" class="col-6" align="center">
+
+            <br />
+            <h3>Información del Restaurante  </h3>
+            <form action="{% url 'restaurant:restaurants-capacity' manager.id restaurant.id%}" method="post" class="menu_item" oninput="total_capacity.value=parseInt(capacity.value)*parseInt(capacity_percent.value)/100">
+                {% csrf_token %}
+                <br />
+                <p>Dirección</p>
+                <input id = "capacity" class="form-control col-4" name = "capacity" type="number" maxlength="100" value={{ restaurant.capacity }}>
+                <br />
+                <p>Teléfono</p>
+                <input id = "capacity_percent" class="form-control col-4" name = "capacity_percent" min="0" max="100" type="number" maxlength="3" value={{ restaurant.capacity_percent }}>
+                <br />
+                <p>Descripción</p>
+                <input id = "total_capacity" class="form-control col-4" name = "total_capacity" type="number" value={{ restaurant.total_capacity }}>
+                <br />
+                <input type="submit" class="btn btn-outline-secondary" id = "sf_submit" value="Guardar">
+                <br />
+            </form>
+
+
+        </div>
+
+        <div class="col-3" >
+        </div>
+    </div>
+
+
+
+</div>

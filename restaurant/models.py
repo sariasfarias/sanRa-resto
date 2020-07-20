@@ -111,13 +111,16 @@ class Reservation(models.Model):
     dni = models.CharField(max_length=20, null=True, blank=True)
     cellphone = models.CharField(max_length=200, null=True, blank=True)
 
-    '''def __str__(self):
-        person = self.guest.user.get_full_name()
+    def __str__(self):
+        person = self.full_name
         place = self.restaurant.name
         time = self.coming
-        return person + " in " + place + " at " + str(time)
+        cellphone = ""
+        if self.cellphone is not None:
+            cellphone = " - " + self.cellphone
+        return person + " en " + place + " a las " + str(time) + cellphone
     
-    def get_finishing_time(self):
+    '''def get_finishing_time(self):
         return self.coming + datetime.timedelta(hours=self.duration)
     '''
 
