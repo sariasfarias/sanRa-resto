@@ -1260,6 +1260,8 @@ class ReservationViewSet(viewsets.ModelViewSet):
                 if reservation_hour.capacity + new_reservation['number_guest'] <= restaurant.total_capacity:
                     reservation_hour.capacity += new_reservation['number_guest']
                     reservation_hour.capacity_free = restaurant.capacity - reservation_hour.capacity
+                    if reservation_hour.capacity_free < 0:
+                        reservation_hour.capacity_free = 0
                     reservation_hour.save()
                 else:
                     active_reservation = False
