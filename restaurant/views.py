@@ -1192,6 +1192,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         # reservation_list_day = ReserveByHour.objects.filter(date__gte=coming, date__lt=leaving)
 
         right_now = datetime.now()
+        right_now += timedelta(hours=-3)
         if coming < right_now:
             return Response("La reserva no puede ser anterior",
                             status=status.HTTP_400_BAD_REQUEST
@@ -1214,15 +1215,16 @@ class ReservationViewSet(viewsets.ModelViewSet):
         # obtener llegada y salida
         reservation_day_leaving = leaving
         # get today open dinner
-        open_dinner = reservation_day_leaving.replace(hour=restaurant.open_dinner.hour,
-                                                      minute=restaurant.open_dinner.minute,
-                                                      second=0, microsecond=0)
-        # get today closed dinner
-        closed_dinner = reservation_day_leaving.replace(hour=restaurant.close_dinner.hour,
-                                                        minute=restaurant.close_dinner.minute,
-                                                        second=0, microsecond=0)
-        if restaurant.close_dinner < restaurant.open_dinner:
-            closed_dinner += timedelta(days=1)
+        if restaurant.open_dinner and restaurant.close_dinner:
+            open_dinner = reservation_day_leaving.replace(hour=restaurant.open_dinner.hour,
+                                                          minute=restaurant.open_dinner.minute,
+                                                          second=0, microsecond=0)
+            # get today closed dinner
+            closed_dinner = reservation_day_leaving.replace(hour=restaurant.close_dinner.hour,
+                                                            minute=restaurant.close_dinner.minute,
+                                                            second=0, microsecond=0)
+            if restaurant.close_dinner < restaurant.open_lunch:
+                closed_dinner += timedelta(days=1)
 
         if coming < closed_lunch:
             if coming < open_lunch:
