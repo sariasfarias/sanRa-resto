@@ -1231,7 +1231,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
                 return Response("Restaurant abre " + str(open_lunch.hour) + ":" + str(open_lunch.minute),
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
-            if closed_dinner:
+            if restaurant.open_dinner and restaurant.close_dinner:
                 if closed_dinner < coming:
                     return Response("Restaurant cierra " + str(closed_dinner.hour) + ":" + str(closed_dinner.minute),
                                     status=status.HTTP_400_BAD_REQUEST)
@@ -1242,7 +1242,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         if closed_lunch < leaving and coming < open_lunch:
             return Response("Restaurant cierra " + str(closed_lunch.hour) + ":" + str(closed_lunch.minute),
                             status=status.HTTP_400_BAD_REQUEST)
-        elif closed_dinner:
+        elif restaurant.open_dinner and restaurant.close_dinner:
             if closed_dinner < leaving:
                 return Response("Restaurant cierra " + str(closed_dinner.hour) + ":" + str(closed_dinner.minute),
                                 status=status.HTTP_400_BAD_REQUEST)
