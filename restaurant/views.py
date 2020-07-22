@@ -1062,7 +1062,10 @@ def manager_restaurant_capacity(request, manager_id, restaurant_id):
         reservation_by_hour_list = ReserveByHour.objects.filter(restaurant=restaurant)
 
         for reservation_by_hour in reservation_by_hour_list:
-            reservation_by_hour_list.capacity_free = capacity - reservation_by_hour.capacity
+            reservation_by_hour.capacity_free = total_capacity - reservation_by_hour.capacity
+            if reservation_by_hour.capacity_free < 0:
+                reservation_by_hour.capacity_free = 0
+            reservation_by_hour.save()
 
         return HttpResponseRedirect(reverse('restaurant:manager', args=(manager_id, restaurant_id)))
 
