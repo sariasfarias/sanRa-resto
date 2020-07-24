@@ -44,4 +44,5 @@ urlpatterns = [
     url(r'^manager/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/reservas/$', views.manager_restaurant_reserv_list, name='reservations-list'),
     url(r'^manager/capacity/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/capacity/$', views.manager_restaurant_capacity, name='restaurants-capacity'),
     url(r'^manager/capacity/(?P<manager_id>[0-9]+)/restaurant/(?P<restaurant_id>[0-9]+)/$', views.manager_restaurant_capacity_view, name='restaurants-capacity-view'),
+    url(r'^recovery/$', views.password_recovery, name='password_recovery'),
 ]

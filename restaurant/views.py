@@ -115,6 +115,23 @@ def registration(request):
             })
 
 
+# Forgotten password
+def password_recovery(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        if username:
+            updated_user = User.objects.filter(username=username)
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 and password2:
+            if password1 == password2:
+                # update password if changed
+                if password1 != '':
+                    updated_user.set_password(password1)
+                    updated_user.save()
+    return render(request, 'restaurant/password_recovey.html')
+
+
 # User activation
 def activation(request, user_id):
     user = get_object_or_404(User, pk=user_id)
