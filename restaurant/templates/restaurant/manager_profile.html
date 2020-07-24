@@ -17,14 +17,14 @@
   <div id="container" class="clear">
     <!-- Slider -->
     <section id="slider" class="clear">
-        <h1>Profile</h1>
-        <br />
+        <h1>Actualizar información de Perfil</h1>
         {% if error_message %}<p id="error">{{ error_message }}</p>{% endif %}
         {% if info_message %}<p id="info">{{ info_message }}</p>{% endif %}
-        <br />
         <form action="{% url 'restaurant:updating' manager.id %}" method="post" class="menu_item">
               {% csrf_token %}
               <br />
+            <h6 style="text-align:center">Actualize</h6>
+              <h6 style="text-align:center">Nombre y/o Apellido</h6>
               {% if user.first_name %}
                   <input id = "name" name = "first_name" type="text" value="{{ user.first_name }}">
                   {% else %}
@@ -37,6 +37,15 @@
                   <input id= "name" name="last_name" type="text" placeholder="Last Name">
               {% endif %}
               <br />
+            <h6 style="text-align:center">Actualize</h6>
+            <h6 style="text-align:center">Nombre de Usuario</h6>
+              {% if user.username %}
+                  <input id = "name" name = "username" type="text" value="{{ user.username }}">
+                  {% else %}
+                  <input id= "name" name="username" type="text" placeholder="Nombre de Usuario">
+              {% endif %}
+              <br />
+            <h6 style="text-align:center">Actualize contraseña</h6>
               <input id= "name" name = "password1" type="password" placeholder="New Password"  pattern=".{8,30}"  title="8 characters minimum, 30 maximum">
               <br />
               <input id= "name" name = "password2" type="password" placeholder="Repeat New Password"  pattern=".{8,30}"  title="8 characters minimum, 30 maximum">

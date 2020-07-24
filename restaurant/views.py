@@ -158,28 +158,38 @@ def profiling(request, manager_id):
 def updating(request, manager_id):
     this_manager = get_object_or_404(Manager, pk=manager_id)
     if request.method == 'POST':
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        if password1 == password2:
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            updated_manager = Manager.objects.get(pk=manager_id)
-            # update profile
-            updated_user = updated_manager.user
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        updated_manager = Manager.objects.get(pk=manager_id)
+        # update profile
+        updated_user = updated_manager.user
+        if first_name:
             updated_user.first_name = first_name
+            updated_user.save()
+        if last_name:
             updated_user.last_name = last_name
             updated_user.save()
-            # update password if changed
-            if password1 != '':
-                updated_user.set_password(password1)
-                updated_user.save()
-            print("Success! Updated Manager: " + str(updated_manager))
-            return HttpResponseRedirect(reverse('restaurant:profiling', args=(manager_id,)))
-        else:
-            return render(request, 'restaurant/manager_profile.html', context={
-                'manager': this_manager,
-                'error_message': "New password wasn't repeated correctly!"
-            })
+
+        username = request.POST.get('username')
+        if username:
+            updated_user.username = username
+            updated_user.save()
+
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 and password2:
+            if password1 == password2:
+                # update password if changed
+                if password1 != '':
+                    updated_user.set_password(password1)
+                    updated_user.save()
+            else:
+                return render(request, 'restaurant/manager_profile.html', context={
+                    'manager': this_manager,
+                    'error_message': "New password wasn't repeated correctly!"
+                })
+        print("Success! Updated Manager: " + str(updated_manager))
+        return HttpResponseRedirect(reverse('restaurant:profiling', args=(manager_id,)))
 
 
 # Manager's page for menu setting
