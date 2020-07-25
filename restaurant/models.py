@@ -10,7 +10,7 @@ Models for restaurant representation
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     is_ready = models.BooleanField(default=False)
     capacity = models.IntegerField(default=0, null=True, blank=True)
