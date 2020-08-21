@@ -1042,9 +1042,9 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
             filter(coming__range=(open_lunch, closed_lunch)). \
             order_by('coming')
     else:
-        open_lunch = None
-        closed_lunch = None
         if restaurant.open_dinner and restaurant.close_dinner:
+            open_lunch = None
+            closed_lunch = None
             # get today open dinner
             open_dinner = today.replace(hour=restaurant.open_dinner.hour,
                                         minute=restaurant.open_dinner.minute,
@@ -1060,6 +1060,12 @@ def manager_restaurant_reserv_list(request, manager_id, restaurant_id):
                 reservation_list = Reservation.objects.filter(restaurant=restaurant). \
                     filter(coming__range=(open_dinner, closed_dinner)). \
                     order_by('coming')
+        else:
+            open_lunch += timedelta(days=1)
+            closed_lunch += timedelta(days=1)
+            reservation_list = Reservation.objects.filter(restaurant=restaurant). \
+                filter(coming__range=(open_lunch, closed_lunch)). \
+                order_by('coming')
 
     return render(request, 'restaurant/reservation/reservation_list.html', {
         'manager': this_manager,
